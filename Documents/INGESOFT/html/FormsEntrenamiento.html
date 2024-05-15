@@ -103,8 +103,10 @@
     <!-- Div para mostrar los planes obtenidos -->
     <h2>Lista de Planes</h2>
     <div id="plan-list"></div>
-
+    
   </div>
+
+  <div id="success-popup">¡El plan se ha creado exitosamente!</div>
 
   <script>
     // Función para obtener los planes desde la API
@@ -123,6 +125,15 @@
 
     // Cargar los planes al inicio
     window.onload = loadPlans;
+
+    function showSuccessPopup() {
+      const popup = document.getElementById('success-popup');
+      popup.classList.add('show');
+
+      setTimeout(() => {
+        popup.classList.remove('show');
+      }, 3000);
+    }
 
     // Manejar el formulario para crear un nuevo plan
     document.getElementById('plan-form').addEventListener('submit', function (event) {
@@ -168,10 +179,16 @@
         .then(response => response.json())
         .then(data => {
           console.log('Nuevo plan creado:', data);
+          showSuccessPopup();
           loadPlans(); // Recargar la lista de planes
         })
         .catch(error => console.error('Error al crear el plan:', error));
     });
+
+    
+
+    
+
   </script>
 </body>
 </html>
