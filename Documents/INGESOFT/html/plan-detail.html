@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Detalle del Plan</title>
+  <link rel="stylesheet" href="../styles/PlanList.css">
+</head>
+<body>
+  <div class="container">
+    <img src="../images/logo.jpg" alt="Entrenamiento" class="header-image">
+    <h1>Detalle del Plan</h1>
+    <div id="plan-detail"></div>
+    <a href="PlansList.html" class="btn">Volver a la lista</a>
+  </div>
+
+  <script>
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    function loadPlanDetail() {
+      const nombre = getQueryParam('nombre');
+      if (!nombre) {
+        document.getElementById('plan-detail').innerHTML = "<p>No se especificó ningún plan.</p>";
+        return;
+      }
+
+      fetch('http://localhost:8080/api/plans')
+        .then(response => response.json())
+        .then(data => {
+          const plan = data.find(p => p.nombre === nombre);
+          if (!plan) {
+            document.getElementById('plan-detail').innerHTML = "<p>Plan no encontrado.</p>";
+            return;
+          }
+
+          const html = `
+            <p><strong>Nombre:</strong> ${plan.nombre}</p>
+            <p><strong>Edad:</strong> ${plan.edad}</p>
+            <p><strong>Sexo:</strong> ${plan.sexo}</p>
+            <p><strong>Estatura:</strong> ${plan.estatura} cm</p>
+            <p><strong>Peso:</strong> ${plan.peso} kg</p>
+            <p><strong>Actividad:</strong> ${plan.actividad}</p>
+            <p><strong>Frecuencia:</strong> ${plan.frecuencia} días/semana</p>
+            <p><strong>Duración:</strong> ${plan.duracion} semanas</p>
+            <p><strong>Intensidad:</strong> ${plan.intensidad}</p>
+            <p><strong>Objetivo:</strong> ${plan.objetivo}</p>
+            <p><strong>Fecha de inicio:</strong> ${plan.fechaInicio}</p>
+            <p><strong>Notas:</strong> ${plan.notas}</p>
+          `;
+
+          document.getElementById('plan-detail').innerHTML = html;
+        })
+        .catch(error => console.error('Error al cargar detalles:', error));
+    }
+
+    window.onload = loadPlanDetail;
+  </script>
+</body>
+</html>

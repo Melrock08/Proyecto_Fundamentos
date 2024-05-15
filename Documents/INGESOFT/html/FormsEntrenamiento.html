@@ -1,4 +1,3 @@
-<!-- index.html -->
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -99,96 +98,47 @@
 
       <button type="submit">Enviar Plan</button>
     </form>
-
-    <!-- Div para mostrar los planes obtenidos -->
-    <h2>Lista de Planes</h2>
-    <div id="plan-list"></div>
-    
   </div>
 
   <div id="success-popup">¡El plan se ha creado exitosamente!</div>
 
   <script>
-    // Función para obtener los planes desde la API
-    function loadPlans() {
-      fetch('http://localhost:8080/api/plans') // Asegúrate de que la URL sea correcta
-        .then(response => response.json())
-        .then(data => {
-          let plans = '';
-          data.forEach(plan => {
-            plans += `<p>${plan.nombre} - ${plan.edad} años</p>`;
-          });
-          document.getElementById('plan-list').innerHTML = plans;
-        })
-        .catch(error => console.error('Error al obtener los planes:', error));
-    }
-
-    // Cargar los planes al inicio
-    window.onload = loadPlans;
-
     function showSuccessPopup() {
       const popup = document.getElementById('success-popup');
       popup.classList.add('show');
-
-      setTimeout(() => {
-        popup.classList.remove('show');
-      }, 3000);
+      setTimeout(() => popup.classList.remove('show'), 3000);
     }
 
-    // Manejar el formulario para crear un nuevo plan
     document.getElementById('plan-form').addEventListener('submit', function (event) {
       event.preventDefault();
 
-      const nombre = document.getElementById('nombre').value;
-      const edad = document.getElementById('edad').value;
-      const sexo = document.getElementById('sexo').value;
-      const estatura = document.getElementById('estatura').value;
-      const peso = document.getElementById('peso').value;
-      const duracion = document.getElementById('duracion').value;
-      const frecuencia = document.getElementById('frecuencia').value;
-      const intensidad = document.getElementById('intensidad').value;
-      const objetivo = document.getElementById('objetivo').value;
-      const actividad = document.getElementById('actividad').value;
-      const fecha_inicio = document.getElementById('fecha_inicio').value;
-      const notas = document.getElementById('notas').value;
-
-      // Crear un nuevo plan con los datos del formulario
       const planData = {
-        nombre: nombre,
-        edad: edad,
-        sexo: sexo,
-        estatura: estatura,
-        peso: peso,
-        duracion: duracion,
-        frecuencia: frecuencia,
-        intensidad: intensidad,
-        objetivo: objetivo,
-        actividad: actividad,
-        fechaInicio: fecha_inicio,
-        notas: notas
+        nombre: document.getElementById('nombre').value,
+        edad: document.getElementById('edad').value,
+        sexo: document.getElementById('sexo').value,
+        estatura: document.getElementById('estatura').value,
+        peso: document.getElementById('peso').value,
+        duracion: document.getElementById('duracion').value,
+        frecuencia: document.getElementById('frecuencia').value,
+        intensidad: document.getElementById('intensidad').value,
+        objetivo: document.getElementById('objetivo').value,
+        actividad: document.getElementById('actividad').value,
+        fechaInicio: document.getElementById('fecha_inicio').value,
+        notas: document.getElementById('notas').value
       };
 
-      // Enviar el nuevo plan a la API
       fetch('http://localhost:8080/api/plans', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(planData)
       })
         .then(response => response.json())
         .then(data => {
           console.log('Nuevo plan creado:', data);
           showSuccessPopup();
-          loadPlans(); // Recargar la lista de planes
         })
         .catch(error => console.error('Error al crear el plan:', error));
     });
-
-    
-
-    
-
   </script>
 </body>
 </html>
