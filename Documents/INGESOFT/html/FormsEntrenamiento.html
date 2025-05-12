@@ -1,0 +1,177 @@
+<!-- index.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plan de Entrenamiento</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../styles/FormEntrenamiento.css">
+</head>
+<body>
+  <div class="container">
+    <img src="../images/logo.jpg" alt="Entrenamiento" class="header-image">
+    <h1>Plan de Entrenamiento</h1>
+    
+    <!-- Formulario para enviar un plan -->
+    <form id="plan-form">
+      <div class="form-group">
+        <label for="nombre" class="required">Nombre:</label>
+        <input type="text" id="nombre" name="nombre" placeholder="Tu nombre" required>
+      </div>
+
+      <div class="form-group">
+        <label for="edad" class="required">Edad:</label>
+        <input type="number" id="edad" name="edad" placeholder="Años" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="sexo" class="required">Sexo:</label>
+        <select id="sexo" name="sexo" required>
+          <option value="">Selecciona...</option>
+          <option value="masculino">Masculino</option>
+          <option value="femenino">Femenino</option>
+          <option value="otro">Otro</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="estatura" class="required">Estatura (cm):</label>
+        <input type="number" id="estatura" name="estatura" placeholder="e.g. 170" min="50" required>
+      </div>
+
+      <div class="form-group">
+        <label for="peso" class="required">Peso (kg):</label>
+        <input type="number" id="peso" name="peso" placeholder="e.g. 65" min="10" required>
+      </div>
+
+      <div class="form-group">
+        <label for="duracion" class="required">Duración (semanas):</label>
+        <input type="number" id="duracion" name="duracion" placeholder="e.g. 12" min="1" required>
+      </div>
+
+      <div class="form-group">
+        <label for="frecuencia" class="required">Frecuencia semanal:</label>
+        <input type="number" id="frecuencia" name="frecuencia" placeholder="días por semana" min="1" max="7" required>
+      </div>
+
+      <div class="form-group">
+        <label for="intensidad" class="required">Intensidad:</label>
+        <select id="intensidad" name="intensidad" required>
+          <option value="">Selecciona...</option>
+          <option value="baja">Baja</option>
+          <option value="media">Media</option>
+          <option value="alta">Alta</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="objetivo" class="required">Objetivo Principal:</label>
+        <select id="objetivo" name="objetivo" required>
+          <option value="">Selecciona...</option>
+          <option value="perder_peso">Perder peso</option>
+          <option value="ganar_musculo">Ganar músculo</option>
+          <option value="mejorar_resistencia">Mejorar resistencia</option>
+          <option value="tonificar">Tonificar</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="actividad" class="required">Nivel de actividad:</label>
+        <select id="actividad" name="actividad" required>
+          <option value="">Selecciona...</option>
+          <option value="sedentario">Sedentario</option>
+          <option value="ligero">Ligero</option>
+          <option value="moderado">Moderado</option>
+          <option value="alto">Alto</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="fecha_inicio" class="required">Fecha de inicio:</label>
+        <input type="date" id="fecha_inicio" name="fecha_inicio" required>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="notas" class="required">Notas adicionales:</label>
+        <textarea id="notas" name="notas" rows="4" placeholder="Comentarios extra..." required></textarea>
+      </div>
+
+      <button type="submit">Enviar Plan</button>
+    </form>
+
+    <!-- Div para mostrar los planes obtenidos -->
+    <h2>Lista de Planes</h2>
+    <div id="plan-list"></div>
+
+  </div>
+
+  <script>
+    // Función para obtener los planes desde la API
+    function loadPlans() {
+      fetch('http://localhost:8080/api/plans') // Asegúrate de que la URL sea correcta
+        .then(response => response.json())
+        .then(data => {
+          let plans = '';
+          data.forEach(plan => {
+            plans += `<p>${plan.nombre} - ${plan.edad} años</p>`;
+          });
+          document.getElementById('plan-list').innerHTML = plans;
+        })
+        .catch(error => console.error('Error al obtener los planes:', error));
+    }
+
+    // Cargar los planes al inicio
+    window.onload = loadPlans;
+
+    // Manejar el formulario para crear un nuevo plan
+    document.getElementById('plan-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      const nombre = document.getElementById('nombre').value;
+      const edad = document.getElementById('edad').value;
+      const sexo = document.getElementById('sexo').value;
+      const estatura = document.getElementById('estatura').value;
+      const peso = document.getElementById('peso').value;
+      const duracion = document.getElementById('duracion').value;
+      const frecuencia = document.getElementById('frecuencia').value;
+      const intensidad = document.getElementById('intensidad').value;
+      const objetivo = document.getElementById('objetivo').value;
+      const actividad = document.getElementById('actividad').value;
+      const fecha_inicio = document.getElementById('fecha_inicio').value;
+      const notas = document.getElementById('notas').value;
+
+      // Crear un nuevo plan con los datos del formulario
+      const planData = {
+        nombre: nombre,
+        edad: edad,
+        sexo: sexo,
+        estatura: estatura,
+        peso: peso,
+        duracion: duracion,
+        frecuencia: frecuencia,
+        intensidad: intensidad,
+        objetivo: objetivo,
+        actividad: actividad,
+        fechaInicio: fecha_inicio,
+        notas: notas
+      };
+
+      // Enviar el nuevo plan a la API
+      fetch('http://localhost:8080/api/plans', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(planData)
+      })
+        .then(response => response.json())
+        .then(data => {
+          console.log('Nuevo plan creado:', data);
+          loadPlans(); // Recargar la lista de planes
+        })
+        .catch(error => console.error('Error al crear el plan:', error));
+    });
+  </script>
+</body>
+</html>
