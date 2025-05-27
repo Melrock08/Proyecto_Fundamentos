@@ -1,0 +1,148 @@
+/* Estilo base */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Roboto', sans-serif;
+ background: linear-gradient(135deg, #244935 0%, #ffffff 100%);  display: flex;
+  justify-content: center;
+  align-items: start;
+  min-height: 100vh;
+}
+
+/* Contenedor principal */
+.container {
+  background-color: rgba(255, 255, 255, 0.1);
+  margin: 3rem 1rem;
+  padding: 2rem 2.5rem;
+  border-radius: 1rem;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 700px;
+}
+
+/* Imagen superior */
+.header-image {
+  width: 120px;
+  height: auto;
+  display: block;
+  margin: 0 auto 1rem auto;
+  border-radius: 50%;
+  border: 3px solid white;
+}
+
+/* Títulos */
+h1, h2 {
+  text-align: center;
+  color: #f1faee;
+  margin-bottom: 1rem;
+}
+
+/* Grupo de formulario */
+.form-group {
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Etiquetas */
+label {
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  color: #f1faee;
+}
+
+label.required::after {
+  content: " *";
+  color: #e63946;
+}
+
+/* Entradas y selects */
+input, select, textarea {
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  border: none;
+  font-size: 1rem;
+  outline: none;
+  background-color: #f1faee;
+  color: #1d3557;
+}
+
+/* Área de texto */
+textarea {
+  resize: vertical;
+}
+
+/* Botón principal */
+button[type="submit"] {
+  background-color: #e63946;
+  color: white;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  width: 100%;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #d62839;
+}
+
+/* Popup de éxito */
+#success-popup {
+  display: none;
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: #2a9d8f;
+  color: white;
+  padding: 1rem 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  font-weight: bold;
+}
+
+#success-popup.show {
+  display: block;
+  animation: fadeInOut 3s ease-in-out;
+}
+
+@keyframes fadeInOut {
+  0% { opacity: 0; transform: translateY(-10px); }
+  10% { opacity: 1; transform: translateY(0); }
+  90% { opacity: 1; transform: translateY(0); }
+  100% { opacity: 0; transform: translateY(-10px); }
+}
+
+/* Estilo para los planes listados */
+#plan-list {
+  margin-top: 2rem;
+}
+
+.plan-card {
+  background-color: rgba(189, 199, 189, 0.425);
+  border-left: 5px solid #306851;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.5rem;
+  color: #f1faee;
+}
+
+.btn {
+  display: inline-block;
+  margin-top: 1rem;
+  padding: 0.6rem 1.5rem;
+  background-color: #375f57;
+  color: white;
+  text-decoration: none;
+  border-radius: 0.5rem;
+  transition: background-color 0.3s ease;
+  font-weight: bold;
+  text-align: center;
+}
+
+.btn:hover {
+  background-color: #45746b;
+}
