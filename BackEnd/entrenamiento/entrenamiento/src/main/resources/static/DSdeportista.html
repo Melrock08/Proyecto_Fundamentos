@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Panel de Deportista</title>
+  <link rel="stylesheet" href="/styles/roles.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar lateral -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/tutorial-deportista.html" class="active">Tutorial</a></li>
+      <li><a href="/perfil.html">Perfil</a></li>
+      <li><a href="/DSDeportista.html">Dashboard</a></li>
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Panel de Deportista</h1>
+      <p>Sigue tu plan, registra avances y mantente en contacto con tu entrenador.</p>
+    </header>
+
+    <main class="cards-container">
+      <!-- 1. Consulta de Plan de Entrenamiento -->
+      <section id="plan-entrenamiento" class="cards-container">
+        <a href="/plan-entrenamiento.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/plan.png" alt="Plan de Entrenamiento" class="card-icon" />
+            <h2>Mi Plan de Entrenamiento</h2>
+            <p>Consulta tus sesiones diarias/semanales, videos explicativos y agrega comentarios.</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- 2. Registro de Sesiones -->
+       
+      <section id="registro-sesiones" class="cards-container">
+        <a href="/registro-sesiones.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/registros.png" alt="Registro de Sesiones" class="card-icon" />
+            <h2>Registro de Sesiones</h2>
+            <p>Marca como completadas tus sesiones, registra sensaciones y métricas físicas.</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- 3. Calendario Personal -->
+      <section id="calendario-personal" class="cards-container">
+        <a href="/calendario-personal.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/prog.png" alt="Calendario Personal" class="card-icon" />
+            <h2>Calendario Personal</h2>
+            <p>Visualiza sesiones agendadas, confirma asistencia y sincroniza con Google Calendar.</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- 4. Comunicación y Feedback -->
+      <section id="comunicacion-feedback" class="cards-container">
+        <a href="/comunicacion-feedback-d.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/feedback.png" alt="Comunicación y Feedback" class="card-icon" />
+            <h2>Comunicación y Feedback</h2>
+            <p>Chatea con tu entrenador, revisa comentarios y sigue tus gráficas de progreso.</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- 5. Reportes y Ajustes -->
+      <section id="reportes-ajustes" class="cards-container">
+        <a href="/reportes-ajustes.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/reportes.png" alt="Reportes y Ajustes" class="card-icon" />
+            <h2>Reportes y Ajustes</h2>
+            <p>Consulta tu historial, descarga reportes mensuales y gestiona notificaciones.</p>
+          </div>
+        </a>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

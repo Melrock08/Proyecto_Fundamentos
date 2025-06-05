@@ -4,14 +4,14 @@ import com.example.entrenamiento.dto.UsuarioDTO;
 import com.example.entrenamiento.entity.Usuario;
 import com.example.entrenamiento.repository.UsuarioRepository;
 import com.example.entrenamiento.service.UsuarioService;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.view.RedirectView;
-
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.util.Map;
@@ -19,6 +19,8 @@ import java.util.Optional;
 
 @RestController
 public class AuthRestController {
+
+    private static final Logger log = LoggerFactory.getLogger(AuthRestController.class);
 
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepo;
@@ -47,27 +49,19 @@ public class AuthRestController {
             @RequestParam Integer edad,
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String rol // "ENTRENADOR" o "DEPORTISTA"
+            @RequestParam String rol
     ) {
-        // 1) Verificar duplicado de username
         if (usuarioService.usuarioExiste(username)) {
-            String error = URLEncoder.encode(
-                    "El nombre de usuario ya existe",
-                    StandardCharsets.UTF_8
-            );
+            String error = URLEncoder.encode("El nombre de usuario ya existe",
+                                             StandardCharsets.UTF_8);
             return new RedirectView("/register.html?error=" + error);
         }
-
-        // 2) Verificar duplicado de email
         if (usuarioService.emailExiste(email)) {
-            String error = URLEncoder.encode(
-                    "El correo ya está registrado",
-                    StandardCharsets.UTF_8
-            );
+            String error = URLEncoder.encode("El correo ya está registrado",
+                                             StandardCharsets.UTF_8);
             return new RedirectView("/register.html?error=" + error);
         }
 
-        // 3) Crear y guardar nuevo usuario
         Usuario nuevo = new Usuario();
         nuevo.setEmail(email);
         nuevo.setNombre(nombre);
@@ -77,7 +71,6 @@ public class AuthRestController {
         nuevo.setRole("ROLE_" + rol);
         usuarioService.registrarNuevoUsuario(nuevo);
 
-        // 4) Redirigir a login.html?registrado=true
         return new RedirectView("/login.html?registrado=true");
     }
 
@@ -89,13 +82,9 @@ public class AuthRestController {
     @GetMapping("/api/me")
     public UsuarioDTO obtenerUsuarioAutenticado(Authentication authentication) {
         String username = authentication.getName();
-        Optional<Usuario> opt = usuarioRepo.findByUsername(username);
-        if (opt.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
-        Usuario usuario = opt.get();
+        Usuario usuario = usuarioRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Construye el DTO usando tu clase existente
         return new UsuarioDTO(
                 usuario.getEmail(),
                 usuario.getNombre(),
