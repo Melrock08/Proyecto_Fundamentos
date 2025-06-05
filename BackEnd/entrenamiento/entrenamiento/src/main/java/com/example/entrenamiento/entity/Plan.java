@@ -1,7 +1,17 @@
 package com.example.entrenamiento.entity;
 
-import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "planes")
@@ -11,58 +21,47 @@ public class Plan {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    // — Campos básicos existentes (puedes mantenerlos si los necesitas):
     private String nombre;
-    private Integer edad;
-    private String sexo;
-    private Integer estatura;      // en centímetros
-    private Integer peso;          // en kilogramos
-    private Integer duracion;      // número de semanas
-    private Integer frecuencia;    // días por semana
-    private String intensidad;     // baja, media, alta
-    private String objetivo;       // perder_peso, ganar_musculo…
-    private String actividad;      // sedentario, moderado, alto
-    private LocalDate fechaInicio;
 
-    @Column(length = 500)
-    private String notas;
+    // — Metadatos nuevos para “plan personalizado”:
+    private String descripcion;        // descripción breve del plan
+    private String nivel;              // principiante, intermedio, avanzado
+    private Integer duracion;          // en semanas
+    private String objetivoGeneral;    // “perder_grasa”, “ganar_musculo”, etc.
+    private String publico;            // “hombres”, “mujeres”, “unisex”, etc.
 
-    // —— Getters y setters ——
+
+    // — Relación con Fase (1 Plan → * Fases) —
+    @OneToMany(mappedBy = "plan", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonManagedReference
+    private List<Fase> fases = new ArrayList<>();
+
+    // —— Constructores, getters y setters —— //
+
+    public Plan() { }
+
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
     public String getNombre() { return nombre; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
-    public Integer getEdad() { return edad; }
-    public void setEdad(Integer edad) { this.edad = edad; }
+    public String getDescripcion() { return descripcion; }
+    public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
 
-    public String getSexo() { return sexo; }
-    public void setSexo(String sexo) { this.sexo = sexo; }
-
-    public Integer getEstatura() { return estatura; }
-    public void setEstatura(Integer estatura) { this.estatura = estatura; }
-
-    public Integer getPeso() { return peso; }
-    public void setPeso(Integer peso) { this.peso = peso; }
+    public String getNivel() { return nivel; }
+    public void setNivel(String nivel) { this.nivel = nivel; }
 
     public Integer getDuracion() { return duracion; }
     public void setDuracion(Integer duracion) { this.duracion = duracion; }
 
-    public Integer getFrecuencia() { return frecuencia; }
-    public void setFrecuencia(Integer frecuencia) { this.frecuencia = frecuencia; }
+    public String getObjetivoGeneral() { return objetivoGeneral; }
+    public void setObjetivoGeneral(String objetivoGeneral) { this.objetivoGeneral = objetivoGeneral; }
 
-    public String getIntensidad() { return intensidad; }
-    public void setIntensidad(String intensidad) { this.intensidad = intensidad; }
+    public String getPublico() { return publico; }
+    public void setPublico(String publico) { this.publico = publico; }
 
-    public String getObjetivo() { return objetivo; }
-    public void setObjetivo(String objetivo) { this.objetivo = objetivo; }
-
-    public String getActividad() { return actividad; }
-    public void setActividad(String actividad) { this.actividad = actividad; }
-
-    public LocalDate getFechaInicio() { return fechaInicio; }
-    public void setFechaInicio(LocalDate fechaInicio) { this.fechaInicio = fechaInicio; }
-
-    public String getNotas() { return notas; }
-    public void setNotas(String notas) { this.notas = notas; }
+    public List<Fase> getFases() { return fases; }
+    public void setFases(List<Fase> fases) { this.fases = fases; }
 }

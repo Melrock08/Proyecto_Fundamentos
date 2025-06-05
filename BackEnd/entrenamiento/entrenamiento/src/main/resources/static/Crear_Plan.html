@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Crear Plan Personalizado</title>
+
+  <!-- Hoja de estilo compartida para roles (navbar, tipografías, etc.) -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+
+  <!-- Hoja de estilo específica para el formulario dinámico -->
+  <link rel="stylesheet" href="/styles/FormEntrenamiento.css" />
+
+  <!-- Fuente Montserrat (coherente con toda la plataforma) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar lateral idéntico al del dashboard de entrenador -->
+  <!-- Navbar lateral ajustado -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <!-- “Inicio” ahora va a la página de tutorial específico para entrenadores -->
+      <li><a href="/tutorial-entrenador.html" class="active">Inicio</a></li>
+      <!-- Perfil del entrenador (puede apuntar a una futura página /roles/perfil-entrenador.html) -->
+      <li><a href="/perfil-entrenador.html">Perfil</a></li>
+       <!-- Dashboard -->
+      <li><a href="/DSentrenador.html">Dashboard</a></li>
+      <!-- ver planes -->
+      <li><a href="/plansList.html">Ver planes</a></li>
+      <!-- Cerrar sesión -->
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Crear Plan Personalizado</h1>
+      <p>Rellena todos los campos para generar un plan de entrenamiento completo.</p>
+    </header>
+
+    <div class="form-wrapper">
+      <form id="plan-form">
+        <!-- 1. Nombre y descripción breve -->
+        <div class="form-group full-width">
+          <label for="plan-nombre" class="required">Nombre del Plan:</label>
+          <input type="text" id="plan-nombre" name="planNombre" placeholder="Ej. Plan Hipertrofia Diciembre" required />
+        </div>
+        <div class="form-group full-width">
+          <label for="plan-descripcion">Descripción Breve:</label>
+          <textarea id="plan-descripcion" name="planDescripcion" rows="2" placeholder="Describe brevemente el propósito o enfoque del plan"></textarea>
+        </div>
+
+        <!-- 2. Metadatos: nivel, duración, objetivo general, público objetivo -->
+        <div class="form-group">
+          <label for="nivel" class="required">Nivel:</label>
+          <select id="nivel" name="nivel" required>
+            <option value="">Selecciona...</option>
+            <option value="principiante">Principiante</option>
+            <option value="intermedio">Intermedio</option>
+            <option value="avanzado">Avanzado</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="duracion" class="required">Duración Estimada (semanas):</label>
+          <input type="number" id="duracion" name="duracion" min="1" placeholder="Ej. 12" required />
+        </div>
+
+        <div class="form-group">
+          <label for="objetivo-general" class="required">Objetivo General:</label>
+          <select id="objetivo-general" name="objetivoGeneral" required>
+            <option value="">Selecciona...</option>
+            <option value="aumentar_masa">Aumentar masa muscular</option>
+            <option value="mejorar_resistencia">Mejorar resistencia cardiovascular</option>
+            <option value="perder_grasa">Perder grasa</option>
+            <option value="mantener">Mantener estado físico</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="publico" class="required">Público Objetivo:</label>
+          <select id="publico" name="publico" required>
+            <option value="">Selecciona...</option>
+            <option value="hombres">Hombres</option>
+            <option value="mujeres">Mujeres</option>
+            <option value="unisex">Unisex</option>
+            <option value="adultos_mayores">Adultos mayores</option>
+          </select>
+        </div>
+
+        <!-- 3. Bloques de entrenamiento (fases) dinámicos -->
+        <fieldset class="form-group full-width">
+          <legend>Fases de Entrenamiento</legend>
+          <div id="fases-container">
+            <!-- Aquí se irán agregando dinámicamente los bloques “fase” -->
+          </div>
+          <button type="button" id="agregar-fase" class="btn-add">+ Agregar Fase</button>
+        </fieldset>
+
+        <button type="submit" class="btn-submit">Guardar Plan</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Popup de éxito -->
+  <div id="success-popup">¡El plan se ha creado exitosamente!</div>
+
+  <!-- Script para manejar adición de fases y semanas -->
+  <script>
+    let faseCount = 0;
+
+    // Función para crear un bloque de fase con al menos una semana inicial
+    function crearBloqueFase() {
+      faseCount++;
+      const fasesContainer = document.getElementById('fases-container');
+
+      // Crear contenedor de la fase
+      const faseDiv = document.createElement('div');
+      faseDiv.classList.add('fase-block');
+      faseDiv.setAttribute('data-fase-id', faseCount);
+
+      // Título de la fase
+      const labelFase = document.createElement('label');
+      labelFase.textContent = `Nombre de Fase ${faseCount}:`;
+      labelFase.setAttribute('for', `fase-nombre-${faseCount}`);
+      labelFase.classList.add('required');
+      faseDiv.appendChild(labelFase);
+
+      // Input para nombre de la fase
+      const inputFase = document.createElement('input');
+      inputFase.type = 'text';
+      inputFase.id = `fase-nombre-${faseCount}`;
+      inputFase.name = `faseNombre[${faseCount}]`;
+      inputFase.placeholder = 'Ej. Fase de fuerza';
+      inputFase.required = true;
+      faseDiv.appendChild(inputFase);
+
+      // Contenedor de semanas dentro de esta fase
+      const semanasContainer = document.createElement('div');
+      semanasContainer.classList.add('semanas-container');
+      semanasContainer.setAttribute('data-fase-id', faseCount);
+      faseDiv.appendChild(semanasContainer);
+
+      // Botón para agregar una semana en esta fase
+      const btnAgregarSemana = document.createElement('button');
+      btnAgregarSemana.type = 'button';
+      btnAgregarSemana.textContent = '+ Agregar Semana';
+      btnAgregarSemana.classList.add('btn-add-semana');
+      btnAgregarSemana.addEventListener('click', () => crearBloqueSemana(faseCount));
+      faseDiv.appendChild(btnAgregarSemana);
+
+      // Añadir la fase al contenedor global
+      fasesContainer.appendChild(faseDiv);
+
+      // Crear la primera semana automáticamente
+      crearBloqueSemana(faseCount);
+    }
+
+    let semanaCounters = {}; // Llevar cuenta de cuántas semanas tiene cada fase
+
+    // Función para crear un bloque de semana dentro de una fase dada
+    function crearBloqueSemana(faseId) {
+      if (!semanaCounters[faseId]) semanaCounters[faseId] = 0;
+      semanaCounters[faseId]++;
+      const semanasContainer = document.querySelector(`.semanas-container[data-fase-id="${faseId}"]`);
+
+      const semanaDiv = document.createElement('div');
+      semanaDiv.classList.add('semana-block');
+      semanaDiv.setAttribute('data-fase-id', faseId);
+      semanaDiv.setAttribute('data-semana-id', semanaCounters[faseId]);
+
+      // Etiqueta y número de semana
+      const labelSemana = document.createElement('label');
+      labelSemana.textContent = `Semana ${semanaCounters[faseId]}:`;
+      labelSemana.setAttribute('for', `semana-ejercicios-${faseId}-${semanaCounters[faseId]}`);
+      semanaDiv.appendChild(labelSemana);
+
+      // Textarea para listar ejercicios de la semana
+      const textareaEjercicios = document.createElement('textarea');
+      textareaEjercicios.id = `semana-ejercicios-${faseId}-${semanaCounters[faseId]}`;
+      textareaEjercicios.name = `semanaEjercicios[${faseId}][${semanaCounters[faseId]}]`;
+      textareaEjercicios.rows = 3;
+      textareaEjercicios.placeholder = 'Ej. Sentadilla x4x8, Press banca x4x6...';
+      textareaEjercicios.required = true;
+      semanaDiv.appendChild(textareaEjercicios);
+
+      // Botón para eliminar esta semana
+      const btnEliminarSemana = document.createElement('button');
+      btnEliminarSemana.type = 'button';
+      btnEliminarSemana.textContent = 'Eliminar Semana';
+      btnEliminarSemana.classList.add('btn-remove-semana');
+      btnEliminarSemana.addEventListener('click', () => {
+        semanasContainer.removeChild(semanaDiv);
+      });
+      semanaDiv.appendChild(btnEliminarSemana);
+
+      semanasContainer.appendChild(semanaDiv);
+    }
+
+    // Evento para agregar una nueva fase
+    document.getElementById('agregar-fase').addEventListener('click', crearBloqueFase);
+
+    // Envío del formulario
+    document.getElementById('plan-form').addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      // Construir un objeto con todos los datos del plan
+      const formData = new FormData(event.target);
+      const planObject = {
+        nombre: formData.get('planNombre'),
+        descripcion: formData.get('planDescripcion'),
+        nivel: formData.get('nivel'),
+        duracion: formData.get('duracion'),
+        objetivoGeneral: formData.get('objetivoGeneral'),
+        publico: formData.get('publico'),
+        fases: []
+      };
+
+      // Recopilar las fases y sus semanas
+      for (let i = 1; i <= faseCount; i++) {
+        const faseNombre = formData.get(`faseNombre[${i}]`);
+        if (!faseNombre) continue;
+
+        const faseObj = {
+          nombre: faseNombre,
+          semanas: []
+        };
+
+        const semanasDeFase = semanaCounters[i] || 0;
+        for (let j = 1; j <= semanasDeFase; j++) {
+          const ejercicios = formData.get(`semanaEjercicios[${i}][${j}]`);
+          if (ejercicios) {
+            faseObj.semanas.push({
+              numeroSemana: j,
+              ejercicios: ejercicios.split(',').map(e => e.trim()) // Separar por comas
+            });
+          }
+        }
+        planObject.fases.push(faseObj);
+      }
+
+      // Enviar JSON al servidor
+      fetch('/api/plans', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(planObject)
+      })
+     .then(response => {
+          if (!response.ok) throw new Error('Error en la respuesta del servidor');
+          return response.text(); // o .json() si estás seguro que devuelve JSON
+        })
+        .then(() => {
+          showSuccessPopup();
+        })
+
+    });
+    
+    // Función para mostrar popup de éxito
+    function showSuccessPopup() {
+      const popup = document.getElementById('success-popup');
+      popup.classList.add('show');
+      setTimeout(() => popup.classList.remove('show'), 3000);
+    }
+
+     // Iniciar con una fase por defecto
+    window.onload = () => {
+      crearBloqueFase();
+    };
+
+    
+  </script>
+</body>
+</html>

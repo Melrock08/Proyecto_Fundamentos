@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>CoachSync – Iniciar Sesión</title>
+  <!-- Enlazar CSS del login -->
+  <link rel="stylesheet" href="/styles/login.css">
+  <!-- Importar Google Fonts (Montserrat) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <!-- Navbar lateral -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync">
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/home.html">Inicio</a></li>
+      <li><a href="/login.html" class="active">Login</a></li>
+      <li><a href="/register.html">Registro</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <div class="login-container">
+      <div class="login-card">
+        <h1>Iniciar Sesión</h1>
+        <form method="post" action="/login">
+          <div class="form-group">
+            <label for="username">Usuario:</label>
+            <input type="text" name="username" id="username" required>
+          </div>
+          <div class="form-group">
+            <label for="password">Contraseña:</label>
+            <input type="password" name="password" id="password" required>
+          </div>
+          <button type="submit" class="btn-primary">Entrar</button>
+          <div class="msg-container">
+            <div id="msg-error" class="msg-error"></div>
+            <div id="msg-registrado" class="msg-success"></div>
+            <div id="msg-logout" class="msg-success"></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- JavaScript para leer parámetros de la URL y mostrar mensajes -->
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    if (params.has('error')) {
+      document.getElementById('msg-error').textContent = 'Usuario o contraseña inválidos';
+    }
+    if (params.has('registrado')) {
+      document.getElementById('msg-registrado').textContent = 'Registro exitoso, por favor inicia sesión';
+    }
+    if (params.has('logout')) {
+      document.getElementById('msg-logout').textContent = 'Has cerrado sesión correctamente';
+    }
+  </script>
+
+  <!-- Footer -->
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+</body>
+</html>

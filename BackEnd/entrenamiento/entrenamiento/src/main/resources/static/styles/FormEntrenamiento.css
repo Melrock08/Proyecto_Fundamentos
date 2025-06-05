@@ -1,0 +1,188 @@
+/* FormEntrenamiento.css */
+
+/* Reutilizamos variables de roles.css, así que no las redefinimos aquí */
+
+body {
+  margin: 0;
+  padding: 0;
+}
+
+.form-wrapper {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-bordes);
+  box-shadow: var(--sombra-suave);
+  padding: calc(var(--espaciado) * 2);
+  max-width: 700px;
+  margin: 0 auto 2rem;
+}
+
+.form-wrapper form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form-group,
+.fase-block {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: calc(var(--espaciado) * 1.5);
+}
+
+.form-group label,
+.fase-block label {
+  font-family: var(--fuente-principal);
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--color-texto);
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea,
+.fase-block input,
+.fase-block textarea {
+  font-family: var(--fuente-principal);
+  font-size: 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-bordes);
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus,
+.fase-block input:focus,
+.fase-block textarea:focus {
+  border-color: var(--color-secundario);
+  outline: none;
+}
+
+/* Para que los textarea de fase ocupen todo el ancho */
+.fase-block textarea {
+  width: 100%;
+  resize: vertical;
+}
+
+.form-group.full-width,
+.fase-block.full-width {
+  width: 100%;
+}
+
+.btn-add,
+.btn-add-semana {
+  background-color: transparent;
+  color: var(--color-primario);
+  border: 1px dashed var(--color-primario);
+  font-family: var(--fuente-principal);
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: var(--radio-bordes);
+  cursor: pointer;
+  transition: background-color 0.2s ease, color 0.2s ease;
+  margin-top: -0.5rem;
+  margin-bottom: calc(var(--espaciado) * 1);
+}
+
+.btn-add:hover,
+.btn-add-semana:hover {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+}
+
+/* Estilos específicos de bloque de fase */
+.fase-block {
+  background-color: #fafafa;
+  padding: calc(var(--espaciado) * 1);
+  border: 1px solid #eee;
+  border-radius: var(--radio-bordes);
+  margin-bottom: calc(var(--espaciado) * 2);
+}
+
+.semanas-container {
+  margin-top: calc(var(--espaciado) * 1);
+  margin-bottom: calc(var(--espaciado) * 1);
+}
+
+.semana-block {
+  background-color: #fff;
+  padding: calc(var(--espaciado) * 1);
+  border: 1px solid #ddd;
+  border-radius: var(--radio-bordes);
+  margin-bottom: calc(var(--espaciado) * 1);
+}
+
+.semana-block label {
+  margin-bottom: 0.5rem;
+}
+
+.btn-remove-semana {
+  background-color: #e74c3c;
+  color: var(--color-blanco);
+  border: none;
+  font-family: var(--fuente-principal);
+  font-weight: 600;
+  padding: 0.4rem 0.8rem;
+  border-radius: var(--radio-bordes);
+  cursor: pointer;
+  align-self: flex-end;
+  margin-top: 0.75rem;
+  transition: background-color 0.2s ease;
+}
+
+.btn-remove-semana:hover {
+  background-color: #c0392b;
+}
+
+/* Botón de envío */
+.btn-submit {
+  display: inline-block;
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  font-family: var(--fuente-principal);
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radio-bordes);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.btn-submit:hover {
+  background-color: #17a589;
+  transform: translateY(-2px);
+}
+
+/* Popup de éxito */
+#success-popup {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  padding: 0.75rem 1.25rem;
+  border-radius: var(--radio-bordes);
+  box-shadow: var(--sombra-suave);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  z-index: 200;
+}
+
+#success-popup.show {
+  opacity: 1;
+}
+
+/* Responsive: ajustar el ancho en pantallas estrechas */
+@media screen and (max-width: 768px) {
+  .form-wrapper {
+    padding: calc(var(--espaciado) * 1.5);
+    margin: 0 1rem 2rem;
+  }
+  .fase-block,
+  .semana-block {
+    padding: calc(var(--espaciado) * 0.75);
+  }
+}

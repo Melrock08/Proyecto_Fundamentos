@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Gestión de Entrenamientos</title>
+  <!-- Usamos roles.css para consistencia -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+  <!-- Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar lateral (mismo estilo que en entrenador.html) -->
+  <!-- Navbar lateral ajustado -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+       <!-- Dashboard -->
+      <li><a href="/DSentrenador.html">Inicio</a></li>
+      <li><a href="/CargarVideos.html">Cargar videos</a></li>
+      <li><a href="/Plantillas.html">Reutilizar plantillas</a></li>
+  
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Gestión de Entrenamientos</h1>
+      <p>Aquí puedes crear y administrar todos tus planes de entrenamiento.</p>
+    </header>
+
+    <!-- Tarjetas de funcionalidad específicas -->
+    <main class="cards-container">
+      <!-- 1. Crear Plan Personalizado -->
+      <section id="plan-personalizado" class="cards-container ">
+      <a href="/Crear_Plan.html" style="text-decoration: none;">
+      <div class="card">
+        <img src="/images/planp.png" alt="Crear Plan" class="card-icon" />
+        <h2>Crear Plan Personalizado</h2>
+        <p>Diseña rutinas completas: fases, días, objetivos y niveles.</p>
+      </div>
+      </a>
+      </section>
+
+      <!-- 2. Carga de Videos Explicativos -->
+      <div class="card">
+        <img src="/images/video.png" alt="Cargar Videos" class="card-icon" />
+        <h2>Carga de Videos Explicativos</h2>
+        <p>Sube o vincula videos para que tus deportistas aprendan la técnica correcta.</p>
+      </div>
+
+      <!-- 3. Plantillas Reutilizables -->
+      <div class="card">
+        <img src="/images/plantilla.png" alt="Plantillas" class="card-icon" />
+        <h2>Plantillas Reutilizables</h2>
+        <p>Guarda cualquier plan como plantilla para reutilizarlo en futuros ciclos.</p>
+      </div>
+    </main>
+
+    <!-- Aquí podríamos agregar vínculos “Ver todos los planes”, “Crear nuevo desde cero”, etc. -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

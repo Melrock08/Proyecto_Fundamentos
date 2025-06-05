@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Panel de Entrenador</title>
+  <!-- Hoja de estilo compartida para roles -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+  <!-- Fuente Montserrat (coherente con el resto de la plataforma) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar lateral ajustado -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <!-- “Inicio” ahora va a la página de tutorial específico para entrenadores -->
+      <li><a href="/tutorial-entrenador.html" class="active">Tutorial</a></li>
+      <!-- Perfil del entrenador (puede apuntar a una futura página /roles/perfil-entrenador.html) -->
+      <li><a href="/Perfil.html">Perfil</a></li>
+       <!-- Dashboard -->
+      <li><a href="/DSentrenador.html">Dashboard</a></li>
+      <!-- Cerrar sesión -->
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal -->
+  <div class="main-content">
+    <!-- Encabezado del dashboard -->
+    <header class="role-header">
+      <h1>Panel de Entrenador</h1>
+      <p>Gestiona a tus deportistas, crea planes y revisa métricas.</p>
+    </header>
+    <main class="cards-container">
+   <!-- Solo la tarjeta de "Gestión de Entrenamientos" enlaza a la nueva página -->
+    <section id="gestion-entrenamientos" class="cards-container ">
+      <a href="/gestion_entrenamiento.html" style="text-decoration: none;">
+        <div class="card">
+          <img src="/images/plan.png" alt="Gestión de Entrenamientos" class="card-icon" />
+          <h2>Gestión de Entrenamientos</h2>
+          <p>Crear planes, asignar ejercicios, cargar videos y usar plantillas reutilizables.</p>
+        </div>
+      </a>
+    </section>
+
+     <!-- 2. Calendario de Sesiones -->
+      <section id="calendario-sesiones" class="cards-container">
+        <a href="/roles/calendario-sesiones.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/prog.png" alt="Calendario de Sesiones" class="card-icon" />
+            <h2>Calendario de Sesiones</h2>
+            <p>Gestiona horarios, confirmaciones y sincroniza con Google Calendar.</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- 3. Comunicación y Feedback -->
+      <section id="comunicacion-feedback" class="cards-container">
+        <a href="/roles/comunicacion-feedback.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/feedback.png" alt="Comunicación y Feedback" class="card-icon" />
+            <h2>Comunicación y Feedback</h2>
+            <p>Chat interno, registro de métricas y reportes de evolución.</p>
+          </div>
+        </a>
+      </section>
+
+      <!-- 4. Gestión de Clientes -->
+      <section id="gestion-clientes" class="cards-container">
+        <a href="/roles/gestion-clientes.html" style="text-decoration: none;">
+          <div class="card">
+            <img src="/images/gestionc.png" alt="Gestión de Clientes" class="card-icon" />
+            <h2>Gestión de Clientes</h2>
+            <p>Ficha de deportistas, historial, preferencias y progreso.</p>
+          </div>
+        </a>
+      </section>
+    </main> 
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

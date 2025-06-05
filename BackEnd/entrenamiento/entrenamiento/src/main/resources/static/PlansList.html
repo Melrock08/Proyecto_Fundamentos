@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Lista de Planes</title>
+
+  <!-- Hoja de estilo compartida para roles (navbar, tipografías, etc.) -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+
+  <!-- Hoja de estilo específica para lista de planes -->
+  <link rel="stylesheet" href="/styles/PlanList.css" />
+
+  <!-- Fuente Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <!-- ================= Navbar lateral ================= -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/tutorial-entrenador.html">Inicio</a></li>
+      <li><a href="/perfil-entrenador.html">Perfil</a></li>
+      <li><a href="/DSentrenador.html">Dashboard</a></li>
+      <!-- Debe coincidir con este nombre de archivo: plan-list.html -->
+      <li><a href="/PlansList.html" class="active">Ver Planes</a></li>
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+  <!-- ================================================ -->
+
+  <!-- ================= Contenido principal ================= -->
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Lista de Planes de Entrenamiento</h1>
+      <p>
+        Selecciona un plan para ver más detalles o crea uno nuevo en el
+        formulario correspondiente.
+      </p>
+    </header>
+
+    <!-- Contenedor donde se mostrará la tabla de planes -->
+    <div id="plans-container" class="plans-list-wrapper">
+      <!-- Mientras carga, se muestra un texto -->
+      <p id="loading-text">Cargando planes...</p>
+    </div>
+  </div>
+  <!-- ========================================================= -->
+
+  <script>
+    // ================= Función para renderizar cada fila/entrada de plan =================
+    function renderPlanList(plans) {
+      const container = document.getElementById("plans-container");
+      container.innerHTML = ""; // Se borra el “Cargando...”
+
+      if (!plans || plans.length === 0) {
+        container.innerHTML = "<p>No hay planes creados aún.</p>";
+        return;
+      }
+
+      // Creamos una tabla básica con encabezados
+      const table = document.createElement("table");
+      table.classList.add("plans-table");
+
+      // Encabezado
+      const thead = document.createElement("thead");
+      thead.innerHTML = `
+        <tr>
+          <th>ID</th>
+          <th>Nombre</th>
+          <th>Nivel</th>
+          <th>Duración (sem)</th>
+          <th>Objetivo</th>
+          <th>Público</th>
+          <th>Acciones</th>
+        </tr>
+      `;
+      table.appendChild(thead);
+
+      // Cuerpo de la tabla
+      const tbody = document.createElement("tbody");
+      plans.forEach((plan) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${plan.id}</td>
+          <td>${plan.nombre}</td>
+          <td>${plan.nivel || "-"}</td>
+          <td>${plan.duracion || "-"}</td>
+          <td>${plan.objetivoGeneral || "-"}</td>
+          <td>${plan.publico || "-"}</td>
+          <td>
+            <a href="/plan-detail.html?id=${plan.id}" class="btn-small">Ver Detalle</a>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+      table.appendChild(tbody);
+
+      container.appendChild(table);
+    }
+
+    // ================= Función para mostrar mensaje de error =================
+    function showErrorList(message) {
+      const container = document.getElementById("plans-container");
+      container.innerHTML = `<p class="error-text">${message}</p>`;
+    }
+
+    // ================= Al cargar la página =================
+    window.addEventListener("DOMContentLoaded", () => {
+      fetch("/api/plans")
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error(`El servidor respondió con código ${response.status}`);
+          }
+          return response.json();
+        })
+        .then((plansData) => {
+          renderPlanList(plansData);
+        })
+        .catch((err) => {
+          console.error("Error al obtener la lista de planes:", err);
+          showErrorList("No se pudo cargar la lista de planes. Inténtalo más tarde.");
+        });
+    });
+  </script>
+</body>
+</html>

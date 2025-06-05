@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Detalle del Plan</title>
+
+  <!-- Hoja de estilo compartida para roles (navbar, tipografías, etc.) -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+
+  <!-- Hoja de estilo específica para detalles de plan -->
+  <link rel="stylesheet" href="/styles/PlanDetails.css" />
+
+  <!-- Fuente Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap"
+    rel="stylesheet"
+  />
+</head>
+<body>
+  <!-- ================= Navbar lateral ================= -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/DSentrenador.html">Inicio</a></li>
+      <li><a href="/gestion_entrenamiento.html">Gestion de Entrenamientos</a></li>
+      <!-- Asegúrate de que el enlace coincida con el nombre real del archivo de la lista -->
+      <li><a href="/PlansList.html">Ver Planes</a></li>
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+  <!-- ================================================ -->
+
+  <!-- ================= Contenido principal ================= -->
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Detalle del Plan</h1>
+      <p>Consulta aquí toda la información de tu plan de entrenamiento.</p>
+    </header>
+
+    <!-- Contenedor que actuará como “tarjeta centrada” -->
+    <div id="plan-container" class="plan-details-wrapper">
+      <p id="loading-text">Cargando datos del plan...</p>
+    </div>
+  </div>
+  <!-- ========================================================= -->
+
+  <script>
+    // ================= Utilidad para leer query params =================
+    function getQueryParam(param) {
+      const urlParams = new URLSearchParams(window.location.search);
+      return urlParams.get(param);
+    }
+
+    // ================= Función para renderizar el plan =================
+    function renderPlan(plan) {
+      const container = document.getElementById('plan-container');
+      container.innerHTML = ''; // Vaciamos “Cargando...”
+
+      // Vamos a crear una “tarjeta interna” donde poner toda la info
+      const card = document.createElement('div');
+      card.classList.add('plan-card');
+
+      // 1. Datos generales
+      const headerDiv = document.createElement('div');
+      headerDiv.classList.add('plan-header');
+      headerDiv.innerHTML = `
+        <h2>${plan.nombre}</h2>
+        ${plan.descripcion ? `<p class="plan-descripcion">${plan.descripcion}</p>` : ''}
+        <div class="plan-info-general">
+          <div><strong>Nivel:</strong> ${plan.nivel || '-'}</div>
+          <div><strong>Duración:</strong> ${plan.duracion} semana(s)</div>
+          <div><strong>Objetivo General:</strong> ${plan.objetivoGeneral || '-'}</div>
+          <div><strong>Público:</strong> ${plan.publico || '-'}</div>
+          ${plan.frecuencia !== null ? `<div><strong>Frecuencia:</strong> ${plan.frecuencia} días/semana</div>` : ''}
+          ${plan.intensidad ? `<div><strong>Intensidad:</strong> ${plan.intensidad}</div>` : ''}
+          ${plan.fechaInicio ? `<div><strong>Fecha de Inicio:</strong> ${plan.fechaInicio}</div>` : ''}
+          ${plan.notas ? `<div><strong>Notas:</strong> ${plan.notas}</div>` : ''}
+        </div>
+      `;
+      card.appendChild(headerDiv);
+
+      // 2. Bloque de Fases y Semanas
+      if (plan.fases && plan.fases.length > 0) {
+        const fasesWrapper = document.createElement('div');
+        fasesWrapper.classList.add('fases-wrapper');
+
+        plan.fases.forEach((fase, idxFase) => {
+          const faseDiv = document.createElement('div');
+          faseDiv.classList.add('fase-block');
+
+          // Nombre de la fase
+          const tituloFase = document.createElement('h3');
+          tituloFase.textContent = `Fase ${idxFase + 1}: ${fase.nombre}`;
+          faseDiv.appendChild(tituloFase);
+
+          // Lista de semanas
+          if (fase.semanas && fase.semanas.length > 0) {
+            const semanasList = document.createElement('div');
+            semanasList.classList.add('semanas-list');
+
+            fase.semanas.forEach((semana) => {
+              const semanaDiv = document.createElement('div');
+              semanaDiv.classList.add('semana-block');
+
+              // Mostrar número de semana y ejercicios
+              const ejerciciosTexto = Array.isArray(semana.ejercicios)
+                ? semana.ejercicios.join(', ')
+                : semana.ejercicios;
+
+              semanaDiv.innerHTML = `
+                <h4>Semana ${semana.numeroSemana}</h4>
+                <p>${ejerciciosTexto}</p>
+              `;
+              semanasList.appendChild(semanaDiv);
+            });
+
+            faseDiv.appendChild(semanasList);
+          } else {
+            const noSemanasP = document.createElement('p');
+            noSemanasP.textContent = 'Esta fase no contiene semanas.';
+            faseDiv.appendChild(noSemanasP);
+          }
+
+          fasesWrapper.appendChild(faseDiv);
+        });
+
+        card.appendChild(fasesWrapper);
+      } else {
+        const noFasesP = document.createElement('p');
+        noFasesP.textContent = 'No hay fases registradas para este plan.';
+        card.appendChild(noFasesP);
+      }
+
+      container.appendChild(card);
+    }
+
+    // ================= Función para mostrar mensaje de error =================
+    function showError(message) {
+      const container = document.getElementById('plan-container');
+      container.innerHTML = `<p class="error-text">${message}</p>`;
+    }
+
+    // ================= Al cargar la página =================
+    window.addEventListener('DOMContentLoaded', () => {
+      const planId = getQueryParam('id');
+      if (!planId) {
+        showError('No se especificó ningún ID de plan en la URL.');
+        return;
+      }
+
+      fetch(`/api/plans/${planId}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`El servidor respondió con código ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(planData => {
+          renderPlan(planData);
+        })
+        .catch(err => {
+          console.error('Error al obtener datos del plan:', err);
+          showError('No se pudo cargar la información del plan. Verifica el ID o inténtalo más tarde.');
+        });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,292 @@
+/* ======================================================
+   register.css (CoachSync – Registro con selección de rol y nuevos campos)
+   ====================================================== */
+
+/* 1. Reset ligero y variables globales */
+:root {
+  --color-primario: #2C3E50;
+  --color-secundario: #1ABC9C;
+  --color-fondo: #F4F7FA;
+  --color-texto: #34495E;
+  --color-texto-sec: #7F8C8D;
+  --color-blanco: #FFFFFF;
+  --sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --radio-bordes: 10px;
+  --espaciado: 1rem;
+  --fuente-principal: 'Montserrat', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.6;
+}
+
+/* 2. Navbar lateral */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background-color: var(--color-primario);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: calc(var(--espaciado) * 2);
+  box-shadow: var(--sombra-suave);
+  z-index: 100;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: calc(var(--espaciado) * 2);
+}
+
+.nav-logo img {
+  width: 60px;
+  height: auto;
+  border-radius: var(--radio-bordes);
+}
+
+.nav-logo span {
+  color: var(--color-blanco);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.nav-links {
+  list-style: none;
+  width: 100%;
+}
+
+.nav-links li {
+  margin-bottom: calc(var(--espaciado) * 1.5);
+}
+
+.nav-links a {
+  color: var(--color-blanco);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.05rem;
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease;
+  border-radius: var(--radio-bordes) 0 0 var(--radio-bordes);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background-color: var(--color-secundario);
+  padding-left: 1.5rem;
+}
+
+/* 3. Contenido principal */
+.main-content {
+  margin-left: 260px; /* deja espacio para la barra lateral */
+  padding: calc(var(--espaciado) * 2);
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 4. Contenedor de la tarjeta de registro */
+.register-container {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.register-card {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-bordes);
+  box-shadow: var(--sombra-suave);
+  padding: calc(var(--espaciado) * 2);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.register-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.register-card h1 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: calc(var(--espaciado) * 1.5);
+  color: var(--color-primario);
+}
+
+/* 5. Estilos del formulario */
+.form-group {
+  text-align: left;
+  margin-bottom: calc(var(--espaciado) * 1.5);
+}
+
+.form-group label {
+  display: block;
+  font-size: 1rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+  color: var(--color-texto);
+}
+
+/* Inputs y selects comparten estilo */
+.form-group input,
+.form-group select {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: var(--radio-bordes);
+  transition: border-color 0.2s ease;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: var(--color-secundario);
+  outline: none;
+}
+
+/* Opcional: ocultar flechas en input[type="number"] */
+/*
+.form-group input[type="number"]::-webkit-inner-spin-button,
+.form-group input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+.form-group input[type="number"] {
+  -moz-appearance: textfield;
+}
+*/
+
+/* 5.1. Opciones de rol */
+.role-options {
+  display: flex;
+  gap: 1.5rem;
+  margin-bottom: calc(var(--espaciado) * 1.5);
+}
+
+.role-options label {
+  display: flex;
+  align-items: center;
+  font-size: 1rem;
+  color: var(--color-texto);
+}
+
+.role-options input[type="radio"] {
+  margin-right: 0.5rem;
+  transform: scale(1.1);
+}
+
+/* 6. Botón de envío */
+.btn-primary {
+  display: inline-block;
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  text-decoration: none;
+  font-weight: 600;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: var(--radio-bordes);
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  width: 100%;
+  font-size: 1rem;
+}
+
+.btn-primary:hover {
+  background-color: #17a589;
+  transform: translateY(-2px);
+}
+
+/* 7. Mensajes de estado debajo del botón */
+.msg-container {
+  margin-top: calc(var(--espaciado) * 1);
+  min-height: 2em;
+}
+
+.msg-error {
+  color: #E74C3C;
+  font-size: 0.9rem;
+}
+
+/* 8. Footer */
+footer {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  padding: calc(var(--espaciado) * 2) 0;
+  margin-top: calc(var(--espaciado) * 4);
+  position: relative;
+  bottom: 0;
+  width: 100%;
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-content p {
+  font-size: 0.9rem;
+}
+
+/* 9. Responsive */
+@media screen and (max-width: 1024px) {
+  .navbar {
+    width: 200px;
+  }
+  .main-content {
+    margin-left: 220px;
+    padding: calc(var(--espaciado) * 1.5);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Navbar horizontal en móviles */
+  .navbar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: var(--espaciado);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: var(--espaciado);
+  }
+  .nav-links li {
+    margin-bottom: 0;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: calc(var(--espaciado) * 1.5);
+  }
+  /* Ajuste de la tarjeta */
+  .register-card {
+    padding: calc(var(--espaciado) * 1.5);
+  }
+  .register-card h1 {
+    font-size: 1.75rem;
+  }
+}

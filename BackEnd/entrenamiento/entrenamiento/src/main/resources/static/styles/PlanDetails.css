@@ -1,0 +1,134 @@
+/* PlanDetails.css */
+
+/* ─── ESTILOS GLOBALES PARA BODY Y NAVBAR ─── */
+body {
+  background-color: #f5f7fb;
+  margin: 0;
+  padding: 0;
+  font-family: 'Montserrat', sans-serif;
+
+  /* Lo convertimos en flex column para que main-content ocupe el alto restante */
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+
+/* ─── CONTENEDOR PRINCIPAL (debajo de navbar) ─── */
+.main-content {
+  flex: 1; /* Ocupa todo el alto restante */
+  display: flex;
+  flex-direction: column; /* Colocamos header arriba y wrapper abajo */
+  padding: 2rem;
+  box-sizing: border-box;
+  margin-left: 220px; /* Ajusta al ancho real de tu navbar */
+}
+
+/* ─── ESTILOS PARA EL HEADER DEL DETALLE ─── */
+.role-header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+.role-header h1 {
+  font-size: 2rem;
+  color: #1f2937;
+  margin: 0;
+}
+.role-header p {
+  margin-top: 0.5rem;
+  color: #4b5563;
+}
+
+/* ─── CONTENEDOR QUE CENTRA LA TARJETA ─── */
+.plan-details-wrapper {
+  display: flex;
+  justify-content: center; /* Centrado horizontal */
+  align-items: flex-start; /* Empieza arriba; no centra verticalmente */
+  width: 100%;
+}
+
+/* ─── TARJETA INTERNA (CARD) ─── */
+.plan-card {
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+/* ─── ENCABEZADO DEL PLAN DENTRO DE LA CARD ─── */
+.plan-header h2 {
+  margin: 0 0 0.5rem 0;
+  font-size: 1.75rem;
+  color: #1f2937;
+}
+.plan-descripcion {
+  margin: 0 0 1rem 0;
+  font-size: 1rem;
+  color: #4b5563;
+  font-style: italic;
+}
+
+/* ─── DATOS GENERALES (GRILLA) ─── */
+.plan-info-general {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem 2rem;
+  margin-bottom: 2rem;
+}
+.plan-info-general div {
+  font-size: 0.95rem;
+  color: #374151;
+}
+
+/* ─── BLOQUE DE FASES ─── */
+.fases-wrapper {
+  margin-top: 1.5rem;
+}
+.fase-block {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background-color: #f9fafb;
+  border-left: 4px solid #2563eb;
+  border-radius: 6px;
+}
+.fase-block h3 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  color: #111827;
+}
+
+/* ─── SEMANAS DENTRO DE CADA FASE ─── */
+.semanas-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+.semana-block {
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+.semana-block h4 {
+  margin: 0 0 0.25rem 0;
+  font-size: 1.1rem;
+  color: #1f2937;
+}
+.semana-block p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #4b5563;
+  line-height: 1.4;
+}
+
+/* ─── MENSAJES DE ERROR ─── */
+.error-text {
+  color: #b91c1c; /* rojo oscuro */
+  font-weight: 600;
+  font-size: 1rem;
+  text-align: center;
+}

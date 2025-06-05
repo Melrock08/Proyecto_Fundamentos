@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Tutorial Entrenador</title>
+  <!-- Misma hoja de estilo de roles para mantener consistencia -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+  <!-- Fuente Montserrat -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+  <!-- Navbar lateral igual al de entrenador.html -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+       <!-- Dashboard -->
+      <li><a href="/DSentrenador.html">Dashboard</a></li>
+      <li><a href="/roles/perfil-entrenador.html">Perfil</a></li>
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <!-- Contenido principal del tutorial -->
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Tutorial del Panel de Entrenador</h1>
+      <p>A continuación encontrarás una breve explicación de cada sección disponible en tu dashboard.</p>
+    </header>
+
+    <!-- Sección de tutoriales -->
+    <main style="max-width: 800px; margin: 0 auto; line-height: 1.6;">
+      <!-- 1. Gestión de Entrenamientos -->
+      <section style="margin-bottom: 2rem;">
+        <h2 style="color: var(--color-primario); margin-bottom: 0.5rem;">1. Gestión de Entrenamientos</h2>
+        <p>En esta sección podrás:</p>
+        <ul style="list-style: disc; margin-left: 1.5rem;">
+          <li><strong>Crear Plan de Entrenamiento</strong>: Diseña rutinas detalladas con objetivos claros para cada atleta, definiendo fases, días y niveles.</li>
+          <li><strong>Asignar Ejercicios:</strong> Arrastra ejercicios desde tu biblioteca a cada día o semana, especificando series, repeticiones y tiempos de descanso.</li>
+          <li><strong>Carga de Videos Explicativos:</strong> Asocia uno o varios videos a cada ejercicio para que tus deportistas comprendan la técnica correcta.</li>
+          <li><strong>Plantillas Reutilizables:</strong> Guarda cualquier plan como plantilla para copiarlo rápidamente y reutilizarlo en nuevos ciclos.</li>
+        </ul>
+      </section>
+
+      <!-- 2. Calendario de Sesiones -->
+      <section style="margin-bottom: 2rem;">
+        <h2 style="color: var(--color-primario); margin-bottom: 0.5rem;">2. Calendario de Sesiones</h2>
+        <p>En el calendario podrás:</p>
+        <ul style="list-style: disc; margin-left: 1.5rem;">
+          <li><strong>Agenda Compartida:</strong> Visualiza sesiones planificadas en un calendario mensual/semanal. Cada sesión muestra fecha, hora, deportista y ubicación.</li>
+          <li><strong>Notificaciones Automáticas:</strong> Cuando programes o modifiques una sesión, se enviarán notificaciones a tus deportistas con opciones para confirmar o cancelar.</li>
+          <li><strong>Confirmación y Cancelación:</strong> Tus deportistas pueden confirmar asistencia o solicitar cancelación. Tú podrás aprobar o reagendar desde esta vista.</li>
+          <li><strong>Sincronización con Google Calendar:</strong> Conecta tu cuenta de Google para que las sesiones aparezcan también en tu calendario personal y se actualicen automáticamente.</li>
+        </ul>
+      </section>
+
+      <!-- 3. Comunicación y Feedback -->
+      <section style="margin-bottom: 2rem;">
+        <h2 style="color: var(--color-primario); margin-bottom: 0.5rem;">3. Comunicación y Feedback</h2>
+        <p>Este apartado te facilita:</p>
+        <ul style="list-style: disc; margin-left: 1.5rem;">
+          <li><strong>Chat Interno:</strong> Envía y recibe mensajes directos con cada deportista. Podrás compartir textos, fotos o documentos.</li>
+          <li><strong>Registro de Métricas:</strong> Anota peso, porcentaje de grasa, circunferencias y otros datos de tus deportistas para llevar un seguimiento preciso.</li>
+          <li><strong>Gráficas de Evolución:</strong> Visualiza automáticamente la evolución de las métricas a lo largo del tiempo en gráficos interactivos.</li>
+          <li><strong>Reportes Comparativos Mensuales:</strong> Genera reportes en PDF que muestren el progreso de cada atleta en comparación con meses anteriores.</li>
+        </ul>
+      </section>
+
+      <!-- 4. Gestión de Clientes -->
+      <section style="margin-bottom: 2rem;">
+        <h2 style="color: var(--color-primario); margin-bottom: 0.5rem;">4. Gestión de Clientes</h2>
+        <p>En esta sección podrás:</p>
+        <ul style="list-style: disc; margin-left: 1.5rem;">
+          <li><strong>Fichas Individuales:</strong> Consulta la información básica de cada deportista: datos de contacto, nivel, historial de planes y objetivos.</li>
+          <li><strong>Historial de Entrenamiento:</strong> Revisa cronológicamente cada sesión completada por el atleta, con detalle de ejercicios, pesos y observaciones.</li>
+          <li><strong>Preferencias y Restricciones:</strong> Registra alergias, lesiones, horarios preferidos o cualquier dato relevante antes de diseñar sus planes.</li>
+          <li><strong>Nivel de Progreso y Observaciones:</strong> Agrega notas y evaluaciones periódicas para llevar un seguimiento detallado del avance de cada cliente.</li>
+        </ul>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+      <div class="footer-content">
+        <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>

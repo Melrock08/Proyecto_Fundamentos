@@ -1,0 +1,231 @@
+/* roles.css (compartido para todas las páginas de rol) */
+
+:root {
+  --color-primario: #2C3E50;
+  --color-secundario: #1ABC9C;
+  --color-fondo: #F4F7FA;
+  --color-texto: #34495E;
+  --color-texto-sec: #7F8C8D;
+  --color-blanco: #FFFFFF;
+  --sombra-suave: 0 4px 12px rgba(0, 0, 0, 0.08);
+  --radio-bordes: 10px;
+  --espaciado: 1rem;
+  --fuente-principal: 'Montserrat', sans-serif;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  font-family: var(--fuente-principal);
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+  line-height: 1.6;
+}
+
+/* Navbar lateral */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 240px;
+  height: 100vh;
+  background-color: var(--color-primario);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: calc(var(--espaciado) * 2);
+  box-shadow: var(--sombra-suave);
+  z-index: 100;
+}
+
+.nav-logo {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: calc(var(--espaciado) * 2);
+}
+
+.nav-logo img {
+  width: 60px;
+  height: auto;
+  border-radius: var(--radio-bordes);
+}
+
+.nav-logo span {
+  color: var(--color-blanco);
+  font-size: 1.25rem;
+  font-weight: 600;
+}
+
+.nav-links {
+  list-style: none;
+  width: 100%;
+}
+
+.nav-links li {
+  margin-bottom: calc(var(--espaciado) * 1.5);
+}
+
+.nav-links a {
+  color: var(--color-blanco);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: 1.05rem;
+  display: block;
+  width: 100%;
+  padding: 0.75rem 1rem;
+  transition: background-color 0.2s ease;
+  border-radius: var(--radio-bordes) 0 0 var(--radio-bordes);
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+  background-color: var(--color-secundario);
+  padding-left: 1.5rem;
+}
+
+/* Contenido principal con margen para navbar */
+.main-content {
+  margin-left: 260px; /* deja espacio para la barra lateral */
+  padding: calc(var(--espaciado) * 2);
+  min-height: 100vh;
+}
+
+/* Encabezado de sección */
+.role-header {
+  text-align: center;
+  margin-bottom: calc(var(--espaciado) * 3);
+}
+
+.role-header h1 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--color-primario);
+  margin-bottom: var(--espaciado);
+}
+
+.role-header p {
+  font-size: 1.125rem;
+  color: var(--color-texto-sec);
+}
+
+/* Grid de tarjetas */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: calc(var(--espaciado) * 2);
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+/* Cada tarjeta */
+.card {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-bordes);
+  box-shadow: var(--sombra-suave);
+  padding: calc(var(--espaciado) * 2);
+  text-align: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+}
+
+.card-icon {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: var(--radio-bordes);
+  margin-bottom: var(--espaciado);
+}
+
+.card h2 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: var(--color-secundario);
+}
+
+.card p {
+  font-size: 1rem;
+  color: var(--color-texto-sec);
+  line-height: 1.4;
+}
+
+/* Footer */
+footer {
+  background-color: var(--color-primario);
+  color: var(--color-blanco);
+  padding: calc(var(--espaciado) * 2) 0;
+  margin-top: calc(var(--espaciado) * 4);
+}
+
+.footer-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.footer-content p {
+  font-size: 0.9rem;
+}
+
+/* Responsive */
+@media screen and (max-width: 1024px) {
+  .navbar {
+    width: 200px;
+  }
+  .main-content {
+    margin-left: 220px;
+    padding: calc(var(--espaciado) * 1.5);
+  }
+  .card-icon {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  /* Navbar horizontal en móviles */
+  .navbar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    padding: var(--espaciado);
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .nav-links {
+    display: flex;
+    flex-direction: row;
+    gap: var(--espaciado);
+  }
+  .nav-links li {
+    margin-bottom: 0;
+  }
+  .main-content {
+    margin-left: 0;
+    padding: calc(var(--espaciado) * 1.5);
+  }
+  /* Tarjetas en una sola columna */
+  .cards-container {
+    grid-template-columns: 1fr;
+    gap: var(--espaciado);
+  }
+  .card-icon {
+    width: 56px;
+    height: 56px;
+  }
+}

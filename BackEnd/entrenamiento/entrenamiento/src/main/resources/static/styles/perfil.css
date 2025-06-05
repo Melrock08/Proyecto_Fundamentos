@@ -1,0 +1,108 @@
+/* src/main/resources/static/styles/perfil.css */
+
+/* Contenedor principal de la tarjeta de perfil */
+.profile-container {
+  max-width: 500px;
+  margin: 2rem auto;
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-bordes);
+  box-shadow: var(--sombra-suave);
+  padding: calc(var(--espaciado) * 2);
+  text-align: center;
+  position: relative;
+}
+
+/* Wrapper para la foto de perfil */
+.profile-photo-wrapper {
+  position: relative;
+  width: 120px;
+  height: 120px;
+  margin: 0 auto calc(var(--espaciado) * 1.5);
+}
+
+/* Imagen de perfil circular */
+.profile-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 3px solid var(--color-secundario);
+  background-color: #f0f0f0;
+}
+
+/* Botón para subir foto, flotando sobre la esquina */
+.upload-button {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  border: none;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 1rem;
+  box-shadow: var(--sombra-suave);
+}
+
+.upload-button:hover {
+  background-color: #17a589;
+}
+
+/* El input de tipo file se mantiene oculto */
+.upload-input {
+  display: none;
+}
+
+/* Lista con la información del usuario */
+.profile-info-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 auto calc(var(--espaciado) * 1.5);
+  max-width: 300px;
+  text-align: left;
+}
+
+.profile-info-list li {
+  display: flex;
+  justify-content: space-between;
+  padding: calc(var(--espaciado) * 0.5) 0;
+  border-bottom: 1px solid #eee;
+  font-size: 1rem;
+  color: var(--color-texto);
+}
+
+.profile-info-list li:last-child {
+  border-bottom: none;
+}
+
+/* Etiqueta en negrita y color primario */
+.profile-info-label {
+  font-weight: 600;
+  color: var(--color-primario);
+}
+
+/* Botón para editar perfil */
+.edit-button {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: var(--radio-bordes);
+  font-family: var(--fuente-principal);
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.2s ease;
+  margin: 0 auto;
+  display: block;
+  font-size: 1rem;
+}
+
+.edit-button:hover {
+  background-color: #17a589;
+  transform: translateY(-2px);
+}
