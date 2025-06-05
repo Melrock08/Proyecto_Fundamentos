@@ -18,7 +18,7 @@
       <span>CoachSync</span>
     </div>
     <ul class="nav-links">
-      <li><a href="/tutorial-entrenador.html" class="active">Tutorial</a></li>
+      <li><a href="/tutorial-entrenador.html">Tutorial</a></li>
       <li><a href="/roles/entrenador.html">Dashboard</a></li>
       <li><a href="/roles/perfil.html" class="active">Perfil</a></li>
       <li><a href="/logout">Cerrar Sesión</a></li>
@@ -31,49 +31,71 @@
       <p>Visualiza y actualiza tus datos de usuario</p>
     </header>
 
-    <div class="profile-container">
-      <!-- Foto de Perfil -->
-      <div class="profile-photo-wrapper">
-        <img src="/images/avatar-placeholder.png"
-             alt="Foto de Perfil"
-             id="profile-photo"
-             class="profile-photo" />
-        <label for="upload-input" class="upload-button" title="Subir foto">
-          &#x1F4F7;
-        </label>
-        <input type="file" id="upload-input" class="upload-input" accept="image/*" />
-      </div>
+    <!-- ==================================== -->
+    <!--   SECCIÓN: FOTO DE PERFIL + INPUT   -->
+    <!-- ==================================== -->
+    <div class="profile-photo-wrapper">
+      <!-- Título de la sección -->
+      <h2 class="photo-title">Foto de Perfil</h2>
 
-      <!-- Información del Usuario -->
-      <ul class="profile-info-list">
-        <li>
-          <span class="profile-info-label">Email:</span>
-          <span id="info-email">Cargando...</span>
-        </li>
-        <li>
-          <span class="profile-info-label">Nombre:</span>
-          <span id="info-nombre">Cargando...</span>
-        </li>
-        <li>
-          <span class="profile-info-label">Edad:</span>
-          <span id="info-edad">Cargando...</span>
-        </li>
-        <li>
-          <span class="profile-info-label">Usuario:</span>
-          <span id="info-username">Cargando...</span>
-        </li>
-        <li>
-          <span class="profile-info-label">Rol:</span>
-          <span id="info-role">Cargando...</span>
-        </li>
-      </ul>
+      <!-- Imagen actual o placeholder -->
+      <img
+        src="/images/avatar-placeholder.png"
+        alt="Foto de Perfil"
+        id="profile-photo"
+        class="profile-photo"
+      />
 
-      <!-- Botón para editar perfil -->
-      <button class="edit-button" onclick="window.location.href='/roles/editar-perfil.html'">
-        Editar Perfil
+      <!-- Botón inicial: “Actualizar Imagen” -->
+      <button id="show-url-input-btn" class="upload-button">
+        🌐 Actualizar Imagen
       </button>
-    </div>
-  </div>
+    </div> <!-- .profile-photo-wrapper -->
+
+    <!-- Contenedor para el input de URL + botón “Actualizar Imagen” -->
+    <div class="photo-url-container">
+      <input
+        type="url"
+        id="photo-url-input"
+        class="upload-input"
+        placeholder="https://dominio.com/mi-foto.jpg"
+      />
+      <button id="save-url-btn" class="save-url-button">
+        🌐 Actualizar Imagen
+      </button>
+    </div> <!-- .photo-url-container -->
+
+    <!-- ==================================== -->
+    <!--   SECCIÓN: INFORMACIÓN DE USUARIO    -->
+    <!-- ==================================== -->
+    <ul class="profile-info-list">
+      <li>
+        <span class="profile-info-label">Email:</span>
+        <span id="info-email">Cargando...</span>
+      </li>
+      <li>
+        <span class="profile-info-label">Nombre:</span>
+        <span id="info-nombre">Cargando...</span>
+      </li>
+      <li>
+        <span class="profile-info-label">Edad:</span>
+        <span id="info-edad">Cargando...</span>
+      </li>
+      <li>
+        <span class="profile-info-label">Usuario:</span>
+        <span id="info-username">Cargando...</span>
+      </li>
+      <li>
+        <span class="profile-info-label">Rol:</span>
+        <span id="info-role">Cargando...</span>
+      </li>
+    </ul>
+
+    <!-- Botón para editar perfil -->
+    <button class="edit-button" onclick="window.location.href='/roles/editar-perfil.html'">
+      Editar Perfil
+    </button>
+  </div> <!-- .main-content -->
 
   <footer>
     <div class="footer-content">
@@ -84,71 +106,85 @@
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const profilePhoto = document.getElementById('profile-photo');
-      const uploadInput = document.getElementById('upload-input');
+      const showUrlBtn   = document.getElementById('show-url-input-btn');
+      const urlContainer = document.querySelector('.photo-url-container');
+      const urlInput     = document.getElementById('photo-url-input');
+      const saveUrlBtn   = document.getElementById('save-url-btn');
 
-      // 1) Obtener datos de usuario (incluida la foto)
+      // Obtiene datos de usuario (incluida la URL de la foto, si existe)
       fetch('/api/me')
         .then(response => {
-          if (!response.ok) {
-            throw new Error('No se pudo cargar la información del usuario.');
-          }
+          if (!response.ok) throw new Error('No se pudo cargar la información del usuario.');
           return response.json();
         })
         .then(data => {
-          document.getElementById('info-email').textContent = data.email;
-          document.getElementById('info-nombre').textContent = data.nombre;
-          document.getElementById('info-edad').textContent = data.edad;
+          document.getElementById('info-email').textContent    = data.email;
+          document.getElementById('info-nombre').textContent   = data.nombre;
+          document.getElementById('info-edad').textContent     = data.edad;
           document.getElementById('info-username').textContent = data.username;
           const rol = data.role.startsWith('ROLE_')
-                      ? data.role.substring(5).toLowerCase()
-                      : data.role;
+                        ? data.role.substring(5).toLowerCase()
+                        : data.role;
           document.getElementById('info-role').textContent =
             rol.charAt(0).toUpperCase() + rol.slice(1);
 
-          // Si tiene foto guardada, mostrarla; sino el placeholder
-          if (data.photoFilename) {
-            profilePhoto.src = '/uploads/' + data.photoFilename;
+          // Si ya existe una URL de foto, mostrarla y desplegar el input
+          if (data.photoFilename && data.photoFilename.startsWith('http')) {
+            profilePhoto.src = data.photoFilename;
+            urlInput.value   = data.photoFilename;
+            showUrlBtn.style.display   = 'none';
+            urlContainer.style.display = 'flex';
           }
         })
         .catch(err => {
           console.error(err);
-          // Si falla, mantenemos el placeholder y ponemos “No disponible”
           const spans = document.querySelectorAll('.profile-info-list span:nth-child(2)');
           spans.forEach(span => span.textContent = 'No disponible');
         });
 
-      // 2) Manejar subida de foto: enviarla al servidor
-     uploadInput.addEventListener('change', event => {
-  const file = event.target.files[0];
-  if (!file) return;
+      // Al hacer clic en “Actualizar Imagen”, mostrar el input + botón
+      showUrlBtn.addEventListener('click', () => {
+        showUrlBtn.style.display   = 'none';
+        urlContainer.style.display = 'flex';
+      });
 
-  // Mostrar preview inmediato
-  const reader = new FileReader();
-  reader.onload = e => {
-    profilePhoto.src = e.target.result;
-  };
-  reader.readAsDataURL(file);
+      // Al hacer clic en “Actualizar Imagen” dentro del contenedor:
+      saveUrlBtn.addEventListener('click', () => {
+        const url = urlInput.value.trim();
+        if (!url) {
+          alert('Ingresa primero la URL de tu foto.');
+          return;
+        }
+        if (!/^https?:\/\//.test(url)) {
+          alert('La URL debe comenzar con http:// o https://');
+          return;
+        }
 
-  // Enviar al servidor
-  const formData = new FormData();
-  formData.append('file', file);
+        // Vista previa inmediata
+        profilePhoto.src = url;
 
-  fetch('/api/me/photo', {
-    method: 'POST',
-    body: formData,
-    credentials: 'same-origin'  // <--- sin esto no llega cookie de sesión
-  })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('Error al subir la foto.');
-      }
-      // Todo bien; la próxima recarga mostrará la foto guardada en /uploads/
-    })
-    .catch(err => {
-      console.error(err);
-      alert('No se pudo subir la imagen. Intenta de nuevo.');
-    });
-});
+        // Enviar la URL al servidor
+        fetch('/api/me/photo-url', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'same-origin',
+          body: JSON.stringify({ photoUrl: url })
+        })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error('Error al actualizar la imagen.');
+          }
+          return response.text();
+        })
+        .then(msg => {
+          console.log('Servidor respondió:', msg);
+          // Opcional: notificar al usuario de éxito
+        })
+        .catch(err => {
+          console.error(err);
+          alert('No se pudo actualizar la imagen. Intenta de nuevo.');
+        });
+      });
     });
   </script>
 </body>
