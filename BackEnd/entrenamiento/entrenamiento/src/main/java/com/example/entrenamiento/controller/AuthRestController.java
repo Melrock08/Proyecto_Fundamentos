@@ -4,14 +4,15 @@ import com.example.entrenamiento.dto.UsuarioDTO;
 import com.example.entrenamiento.entity.Usuario;
 import com.example.entrenamiento.repository.UsuarioRepository;
 import com.example.entrenamiento.service.UsuarioService;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
-
 
 import java.io.File;
 import java.io.IOException;
@@ -23,6 +24,8 @@ import java.util.UUID;
 @RestController
 public class AuthRestController {
 
+    private static final Logger log = LoggerFactory.getLogger(AuthRestController.class);
+
     private final UsuarioService usuarioService;
     private final UsuarioRepository usuarioRepo;
 
@@ -32,7 +35,6 @@ public class AuthRestController {
         this.usuarioRepo = usuarioRepo;
     }
 
-    /** Mostrar formulario de registro */
     @GetMapping("/register")
     public RedirectView mostrarRegistro() {
         return new RedirectView("/register.html");
@@ -45,27 +47,19 @@ public class AuthRestController {
             @RequestParam Integer edad,
             @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String rol // "ENTRENADOR" o "DEPORTISTA"
+            @RequestParam String rol
     ) {
-        // 1) Verificar duplicado de username
         if (usuarioService.usuarioExiste(username)) {
-            String error = URLEncoder.encode(
-                    "El nombre de usuario ya existe",
-                    StandardCharsets.UTF_8
-            );
+            String error = URLEncoder.encode("El nombre de usuario ya existe",
+                                             StandardCharsets.UTF_8);
             return new RedirectView("/register.html?error=" + error);
         }
-
-        // 2) Verificar duplicado de email
         if (usuarioService.emailExiste(email)) {
-            String error = URLEncoder.encode(
-                    "El correo ya está registrado",
-                    StandardCharsets.UTF_8
-            );
+            String error = URLEncoder.encode("El correo ya está registrado",
+                                             StandardCharsets.UTF_8);
             return new RedirectView("/register.html?error=" + error);
         }
 
-        // 3) Crear y guardar nuevo usuario
         Usuario nuevo = new Usuario();
         nuevo.setEmail(email);
         nuevo.setNombre(nombre);
@@ -75,25 +69,15 @@ public class AuthRestController {
         nuevo.setRole("ROLE_" + rol);
         usuarioService.registrarNuevoUsuario(nuevo);
 
-        // 4) Redirigir a login.html?registrado=true
         return new RedirectView("/login.html?registrado=true");
     }
 
-    /**
-     * GET /api/me
-     * Devuelve un JSON con los datos básicos del usuario autenticado
-     * (usa la clase UsuarioDTO que ya tienes definida en com.example.entrenamiento.dto).
-     */
     @GetMapping("/api/me")
     public UsuarioDTO obtenerUsuarioAutenticado(Authentication authentication) {
         String username = authentication.getName();
-        Optional<Usuario> opt = usuarioRepo.findByUsername(username);
-        if (opt.isEmpty()) {
-            throw new RuntimeException("Usuario no encontrado");
-        }
-        Usuario usuario = opt.get();
+        Usuario usuario = usuarioRepo.findByUsername(username)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-        // Construye el DTO usando tu clase existente
         return new UsuarioDTO(
                 usuario.getEmail(),
                 usuario.getNombre(),
@@ -104,34 +88,54 @@ public class AuthRestController {
         );
     }
 
-    @PostMapping(value = "/api/me/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public void subirFotoPerfil(
+    @PostMapping(value = "/api/me/photo",
+                 consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<String> subirFotoPerfil(
             Authentication authentication,
             @RequestParam("file") MultipartFile file
-    ) throws IOException {
+    ) {
         String username = authentication.getName();
-        Usuario usuario = usuarioRepo.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // Generar nombre único con UUID
-        String originalName = file.getOriginalFilename();
-        String extension = "";
-        if (originalName != null && originalName.contains(".")) {
-            extension = originalName.substring(originalName.lastIndexOf('.'));
+        Optional<Usuario> optUsuario = usuarioRepo.findByUsername(username);
+        if (optUsuario.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                                 .body("Usuario no autenticado");
         }
-        String filename = UUID.randomUUID().toString() + extension;
 
-        // Guardar en carpeta "uploads/"
-        File carpetaUploads = new File("uploads");
-        if (!carpetaUploads.exists()) {
-            carpetaUploads.mkdirs();
+        Usuario usuario = optUsuario.get();
+
+        try {
+            String originalName = file.getOriginalFilename();
+            String extension = "";
+            if (originalName != null && originalName.contains(".")) {
+                extension = originalName.substring(originalName.lastIndexOf('.'));
+            }
+            String filename = UUID.randomUUID().toString() + extension;
+
+            File carpetaUploads = new File("uploads");
+            if (!carpetaUploads.exists()) {
+                boolean creada = carpetaUploads.mkdirs();
+                if (!creada) {
+                    log.error("No se pudo crear carpeta 'uploads/'");
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                         .body("Error creando carpeta uploads");
+                }
+            }
+
+            File destino = new File(carpetaUploads, filename);
+            file.transferTo(destino);
+
+            usuario.setPhotoFilename(filename);
+            usuarioRepo.save(usuario);
+
+            return ResponseEntity.ok("Foto subida correctamente");
+        } catch (IOException ioe) {
+            log.error("IOException al guardar la foto de perfil", ioe);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Error guardando la foto: " + ioe.getMessage());
+        } catch (RuntimeException re) {
+            log.error("RuntimeException al procesar foto de perfil", re);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                                 .body("Error en el servidor: " + re.getMessage());
         }
-        File destino = new File(carpetaUploads, filename);
-        file.transferTo(destino);
-
-        // Actualizar el usuario
-        usuario.setPhotoFilename(filename);
-        usuarioRepo.save(usuario);
     }
 }
