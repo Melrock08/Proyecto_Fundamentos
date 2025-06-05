@@ -7,18 +7,15 @@ import com.example.entrenamiento.service.UsuarioService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.view.RedirectView;
 
-
-import java.io.File;
-import java.io.IOException;
 import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
+import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 public class AuthRestController {
@@ -32,12 +29,17 @@ public class AuthRestController {
         this.usuarioRepo = usuarioRepo;
     }
 
-    /** Mostrar formulario de registro */
+    /** 
+     * Mostrar formulario de registro 
+     */
     @GetMapping("/register")
     public RedirectView mostrarRegistro() {
         return new RedirectView("/register.html");
     }
 
+    /**
+     * Procesar formulario de registro.
+     */
     @PostMapping("/register")
     public RedirectView procesarRegistro(
             @RequestParam String email,
@@ -82,7 +84,7 @@ public class AuthRestController {
     /**
      * GET /api/me
      * Devuelve un JSON con los datos básicos del usuario autenticado
-     * (usa la clase UsuarioDTO que ya tienes definida en com.example.entrenamiento.dto).
+     * (usa la clase UsuarioDTO que ya tienes en com.example.entrenamiento.dto).
      */
     @GetMapping("/api/me")
     public UsuarioDTO obtenerUsuarioAutenticado(Authentication authentication) {
@@ -100,38 +102,48 @@ public class AuthRestController {
                 usuario.getEdad(),
                 usuario.getUsername(),
                 usuario.getRole(),
-                usuario.getPhotoFilename()
+                usuario.getPhotoFilename()  // Aquí photoFilename contendrá la URL si ya la guardó
         );
     }
 
-    @PostMapping(value = "/api/me/photo", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    @ResponseStatus(HttpStatus.OK)
-    public void subirFotoPerfil(
+    /**
+     * POST /api/me/photo-url
+     * Guarda en la base de datos la URL de la foto de perfil (en lugar de subir un archivo).
+     * Recibe un JSON:
+     *   { "photoUrl": "https://dominio.com/mi-foto.jpg" }
+     */
+    @PostMapping(value = "/api/me/photo-url", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> guardarUrlFoto(
             Authentication authentication,
-            @RequestParam("file") MultipartFile file
-    ) throws IOException {
+            @RequestBody Map<String, String> payload
+    ) {
+        // 1) Validar que venga la clave "photoUrl" en el JSON
+        String photoUrl = payload.get("photoUrl");
+        if (photoUrl == null || photoUrl.trim().isEmpty()) {
+            return ResponseEntity.badRequest()
+                    .body("No se recibió ninguna URL.");
+        }
+        photoUrl = photoUrl.trim();
+
+        // 2) Validar que comience por "http://" o "https://"
+        if (!photoUrl.startsWith("http://") && !photoUrl.startsWith("https://")) {
+            return ResponseEntity.badRequest()
+                    .body("La URL debe comenzar con http:// o https://");
+        }
+
+        // 3) Obtener el usuario autenticado
         String username = authentication.getName();
-        Usuario usuario = usuarioRepo.findByUsername(username)
-                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-
-        // Generar nombre único con UUID
-        String originalName = file.getOriginalFilename();
-        String extension = "";
-        if (originalName != null && originalName.contains(".")) {
-            extension = originalName.substring(originalName.lastIndexOf('.'));
+        Usuario usuario = usuarioRepo.findByUsername(username).orElse(null);
+        if (usuario == null) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body("Usuario no encontrado o sesión expirada.");
         }
-        String filename = UUID.randomUUID().toString() + extension;
 
-        // Guardar en carpeta "uploads/"
-        File carpetaUploads = new File("uploads");
-        if (!carpetaUploads.exists()) {
-            carpetaUploads.mkdirs();
-        }
-        File destino = new File(carpetaUploads, filename);
-        file.transferTo(destino);
-
-        // Actualizar el usuario
-        usuario.setPhotoFilename(filename);
+        // 4) Guardar la URL en el campo photoFilename de la entidad Usuario
+        usuario.setPhotoFilename(photoUrl);
         usuarioRepo.save(usuario);
+
+        // 5) Responder 200 OK
+        return ResponseEntity.ok("URL guardada correctamente.");
     }
 }
