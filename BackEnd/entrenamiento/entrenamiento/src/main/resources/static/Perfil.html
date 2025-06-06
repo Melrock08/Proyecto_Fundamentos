@@ -18,6 +18,7 @@
       <span>CoachSync</span>
     </div>
     <ul id="dynamic-nav" class="nav-links">
+      <!-- Se llenará dinámicamente -->
     </ul>
   </nav>
 
@@ -27,71 +28,79 @@
       <p>Visualiza y actualiza tus datos de usuario</p>
     </header>
 
-    <!-- ==================================== -->
-    <!--   SECCIÓN: FOTO DE PERFIL + INPUT   -->
-    <!-- ==================================== -->
-    <div class="profile-photo-wrapper">
-      <!-- Título de la sección -->
-      <h2 class="photo-title">Foto de Perfil</h2>
+    <!-- Contenedor principal tipo tarjeta -->
+    <div class="profile-container">
+      <!-- SECCIÓN: FOTO DE PERFIL -->
+      <div class="profile-photo-wrapper">
+        <h2 class="photo-title">Foto de Perfil</h2>
+        <img
+          src="/images/avatar.png"
+          alt="Foto de Perfil"
+          id="profile-photo"
+          class="profile-photo"
+        />
+        <!-- Botón para mostrar input de URL -->
+        <button id="show-url-input-btn" class="upload-button" title="Actualizar Imagen">
+          🌐
+        </button>
+      </div>
 
-      <!-- Imagen actual o placeholder -->
-      <img
-        src="/images/avatar-placeholder.png"
-        alt="Foto de Perfil"
-        id="profile-photo"
-        class="profile-photo"
-      />
+      <!-- Input de URL para actualizar foto -->
+      <div class="photo-url-container">
+        <input
+          type="url"
+          id="photo-url-input"
+          class="upload-input"
+          placeholder="https://dominio.com/mi-foto.jpg"
+        />
+        <button id="save-url-btn" class="save-url-button">
+          Actualizar
+        </button>
+      </div>
 
-      <!-- Botón inicial: “Actualizar Imagen” -->
-      <button id="show-url-input-btn" class="upload-button">
-        🌐 Actualizar Imagen
-      </button>
-    </div> <!-- .profile-photo-wrapper -->
-
-    <!-- Contenedor para el input de URL + botón “Actualizar Imagen” -->
-    <div class="photo-url-container">
+      <!-- Input de tipo file para subir imagen -->
       <input
-        type="url"
-        id="photo-url-input"
-        class="upload-input"
-        placeholder="https://dominio.com/mi-foto.jpg"
+        type="file"
+        id="upload-input"
+        class="upload-input-file"
+        accept="image/*"
+        style="display: none;"
       />
-      <button id="save-url-btn" class="save-url-button">
-        🌐 Actualizar Imagen
+
+      <!-- SECCIÓN: INFORMACIÓN DEL USUARIO -->
+      <ul class="profile-info-list">
+        <li>
+          <span class="profile-info-label">Email:</span>
+          <span id="info-email">Cargando...</span>
+        </li>
+        <li>
+          <span class="profile-info-label">Nombre:</span>
+          <span id="info-nombre">Cargando...</span>
+        </li>
+        <li>
+          <span class="profile-info-label">Edad:</span>
+          <span id="info-edad">Cargando...</span>
+        </li>
+        <li>
+          <span class="profile-info-label">Usuario:</span>
+          <span id="info-username">Cargando...</span>
+        </li>
+        <li>
+          <span class="profile-info-label">Rol:</span>
+          <span id="info-role">Cargando...</span>
+        </li>
+      </ul>
+
+      <!-- Botón para editar perfil -->
+      <button
+        class="edit-button"
+        onclick="window.location.href='/roles/editar-perfil.html'"
+      >
+        Editar Perfil
       </button>
-    </div> <!-- .photo-url-container -->
-
-    <!-- ==================================== -->
-    <!--   SECCIÓN: INFORMACIÓN DE USUARIO    -->
-    <!-- ==================================== -->
-    <ul class="profile-info-list">
-      <li>
-        <span class="profile-info-label">Email:</span>
-        <span id="info-email">Cargando...</span>
-      </li>
-      <li>
-        <span class="profile-info-label">Nombre:</span>
-        <span id="info-nombre">Cargando...</span>
-      </li>
-      <li>
-        <span class="profile-info-label">Edad:</span>
-        <span id="info-edad">Cargando...</span>
-      </li>
-      <li>
-        <span class="profile-info-label">Usuario:</span>
-        <span id="info-username">Cargando...</span>
-      </li>
-      <li>
-        <span class="profile-info-label">Rol:</span>
-        <span id="info-role">Cargando...</span>
-      </li>
-    </ul>
-
-    <!-- Botón para editar perfil -->
-    <button class="edit-button" onclick="window.location.href='/roles/editar-perfil.html'">
-      Editar Perfil
-    </button>
-  </div> <!-- .main-content -->
+    </div>
+    <!-- /.profile-container -->
+  </div> <!-- /.main-content -->
 
   <footer>
     <div class="footer-content">
@@ -99,167 +108,149 @@
     </div>
   </footer>
 
- <script>
-document.addEventListener('DOMContentLoaded', () => {
-  const profilePhoto = document.getElementById('profile-photo');
-  const showUrlBtn   = document.getElementById('show-url-input-btn');
-  const urlContainer = document.querySelector('.photo-url-container');
-  const urlInput     = document.getElementById('photo-url-input');
-  const saveUrlBtn   = document.getElementById('save-url-btn');
-  const uploadInput  = document.getElementById('upload-input');
-  const navContainer = document.getElementById('dynamic-nav');
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const profilePhoto = document.getElementById('profile-photo');
+      const showUrlBtn   = document.getElementById('show-url-input-btn');
+      const urlContainer = document.querySelector('.photo-url-container');
+      const urlInput     = document.getElementById('photo-url-input');
+      const saveUrlBtn   = document.getElementById('save-url-btn');
+      const uploadInput  = document.getElementById('upload-input');
+      const navContainer = document.getElementById('dynamic-nav');
 
-  // 1) Obtener datos de usuario (incluida la URL o el nombre de archivo de la foto, si existe)
-  fetch('/api/me', {
-    method: 'GET',
-    credentials: 'same-origin'
-  })
-    .then(response => {
-      if (!response.ok) throw new Error('No se pudo cargar información');
-      return response.json();
-    })
-    .then(data => {
-      // Rellenar datos de perfil
-      document.getElementById('info-email').textContent    = data.email;
-      document.getElementById('info-nombre').textContent   = data.nombre;
-      document.getElementById('info-edad').textContent     = data.edad;
-      document.getElementById('info-username').textContent = data.username;
-
-      // Determinar rol para la barra de navegación
-      const rawRole = data.role.startsWith('ROLE_') ? data.role.substring(5) : data.role;
-      const role = rawRole.toLowerCase();
-      document.getElementById('info-role').textContent =
-        role.charAt(0).toUpperCase() + role.slice(1);
-
-      // Mostrar foto de perfil: si empieza con http, es URL; si no, es nombre de archivo local
-      if (data.photoFilename) {
-        if (data.photoFilename.startsWith('http://') || data.photoFilename.startsWith('https://')) {
-          profilePhoto.src = data.photoFilename;
-          urlInput.value   = data.photoFilename;
-          showUrlBtn.style.display   = 'none';
-          urlContainer.style.display = 'flex';
-        } else {
-          profilePhoto.src = '/uploads/' + data.photoFilename;
-        }
-      }
-
-      // Construcción dinámica de navbar
-      let navLinks = '';
-      if (role === 'entrenador') {
-        navLinks = `
-          <li><a href="/tutorial-entrenador.html">Tutorial</a></li>
-          <li><a href="/DSentrenador.html">Dashboard</a></li>
-          <li><a href="/perfil.html" class="active">Perfil</a></li>
-          <li><a href="/logout">Cerrar Sesión</a></li>
-        `;
-      } else if (role === 'deportista') {
-        navLinks = `
-          <li><a href="/tutorial-deportista.html">Tutorial</a></li>
-          <li><a href="/DSDeportista.html">Dashboard</a></li>
-          <li><a href="/perfil.html" class="active">Perfil</a></li>
-          <li><a href="/logout">Cerrar Sesión</a></li>
-        `;
-      } else {
-        navLinks = `
-          <li><a href="/perfil.html" class="active">Perfil</a></li>
-          <li><a href="/logout">Cerrar Sesión</a></li>
-        `;
-      }
-      navContainer.innerHTML = navLinks;
-    })
-    .catch(err => {
-      console.error(err);
-      // En caso de error, colocar “No disponible” en cada campo
-      document.querySelectorAll('.profile-info-list span:nth-child(2)')
-              .forEach(span => span.textContent = 'No disponible');
-      // Navbar por defecto
-      navContainer.innerHTML = `
-        <li><a href="/perfil.html" class="active">Perfil</a></li>
-        <li><a href="/logout">Cerrar Sesión</a></li>
-      `;
-    });
-
-  // 2) Al hacer clic en “Actualizar Imagen” vía URL, mostrar el input + botón
-  if (showUrlBtn) {
-    showUrlBtn.addEventListener('click', () => {
-      showUrlBtn.style.display   = 'none';
-      urlContainer.style.display = 'flex';
-    });
-  }
-
-  // 3) Al hacer clic en “Actualizar Imagen” (guardar URL)
-  if (saveUrlBtn) {
-    saveUrlBtn.addEventListener('click', () => {
-      const url = urlInput.value.trim();
-      if (!url) {
-        alert('Ingresa primero la URL de tu foto.');
-        return;
-      }
-      if (!/^https?:\/\//.test(url)) {
-        alert('La URL debe comenzar con http:// o https://');
-        return;
-      }
-
-      // Vista previa inmediata
-      profilePhoto.src = url;
-
-      // Enviar la URL al servidor
-      fetch('/api/me/photo-url', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'same-origin',
-        body: JSON.stringify({ photoUrl: url })
-      })
-      .then(response => {
-        if (!response.ok) {
-          throw new Error('Error al actualizar la imagen.');
-        }
-        return response.text();
-      })
-      .then(msg => {
-        console.log('Servidor respondió:', msg);
-        // Opcional: mostrar notificación de éxito
-      })
-      .catch(err => {
-        console.error(err);
-        alert('No se pudo actualizar la imagen. Intenta de nuevo.');
-      });
-    });
-  }
-
-  // 4) Al cambiar el input de tipo file, subir imagen física
-  if (uploadInput) {
-    uploadInput.addEventListener('change', event => {
-      const file = event.target.files[0];
-      if (!file) return;
-
-      // Preview inmediato
-      const reader = new FileReader();
-      reader.onload = e => {
-        profilePhoto.src = e.target.result;
-      };
-      reader.readAsDataURL(file);
-
-      // Enviar al servidor vía FormData
-      const formData = new FormData();
-      formData.append('file', file);
-
-      fetch('/api/me/photo', {
-        method: 'POST',
-        body: formData,
+      // Obtener datos de usuario
+      fetch('/api/me', {
+        method: 'GET',
         credentials: 'same-origin'
       })
         .then(response => {
-          if (!response.ok) throw new Error('Error al subir la foto.');
+          if (!response.ok) throw new Error('No se pudo cargar información');
+          return response.json();
+        })
+        .then(data => {
+          document.getElementById('info-email').textContent    = data.email;
+          document.getElementById('info-nombre').textContent   = data.nombre;
+          document.getElementById('info-edad').textContent     = data.edad;
+          document.getElementById('info-username').textContent = data.username;
+
+          const rawRole = data.role.startsWith('ROLE_')
+            ? data.role.substring(5)
+            : data.role;
+          const role = rawRole.toLowerCase();
+          document.getElementById('info-role').textContent =
+            role.charAt(0).toUpperCase() + role.slice(1);
+
+          if (data.photoFilename) {
+            if (data.photoFilename.startsWith('http://') || data.photoFilename.startsWith('https://')) {
+              profilePhoto.src = data.photoFilename;
+              urlInput.value   = data.photoFilename;
+              showUrlBtn.style.display   = 'none';
+              urlContainer.style.display = 'flex';
+            } else {
+              profilePhoto.src = '/uploads/' + data.photoFilename;
+            }
+          }
+
+          // Navbar dinámico
+          let navLinks = '';
+          if (role === 'entrenador') {
+            navLinks = `
+              <li><a href="/tutorial-entrenador.html">Tutorial</a></li>
+              <li><a href="/DSentrenador.html">Dashboard</a></li>
+              <li><a href="/perfil.html" class="active">Perfil</a></li>
+              <li><a href="/logout">Cerrar Sesión</a></li>
+            `;
+          } else if (role === 'deportista') {
+            navLinks = `
+              <li><a href="/tutorial-deportista.html">Tutorial</a></li>
+              <li><a href="/DSDeportista.html">Dashboard</a></li>
+              <li><a href="/perfil.html" class="active">Perfil</a></li>
+              <li><a href="/logout">Cerrar Sesión</a></li>
+            `;
+          } else {
+            navLinks = `
+              <li><a href="/perfil.html" class="active">Perfil</a></li>
+              <li><a href="/logout">Cerrar Sesión</a></li>
+            `;
+          }
+          navContainer.innerHTML = navLinks;
         })
         .catch(err => {
           console.error(err);
-          alert('No se pudo subir la imagen. Intenta de nuevo.');
+          document.querySelectorAll('.profile-info-list span:nth-child(2)')
+            .forEach(span => span.textContent = 'No disponible');
+          navContainer.innerHTML = `
+            <li><a href="/perfil.html" class="active">Perfil</a></li>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+          `;
         });
-    });
-  }
-});
-</script>
 
+      // Mostrar input de URL
+      if (showUrlBtn) {
+        showUrlBtn.addEventListener('click', () => {
+          showUrlBtn.style.display   = 'none';
+          urlContainer.style.display = 'flex';
+        });
+      }
+
+      // Guardar URL de foto
+      if (saveUrlBtn) {
+        saveUrlBtn.addEventListener('click', () => {
+          const url = urlInput.value.trim();
+          if (!url) {
+            alert('Ingresa primero la URL de tu foto.');
+            return;
+          }
+          if (!/^https?:\/\//.test(url)) {
+            alert('La URL debe comenzar con http:// o https://');
+            return;
+          }
+          profilePhoto.src = url;
+          fetch('/api/me/photo-url', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'same-origin',
+            body: JSON.stringify({ photoUrl: url })
+          })
+            .then(response => {
+              if (!response.ok) throw new Error('Error al actualizar la imagen.');
+              return response.text();
+            })
+            .then(msg => console.log('Servidor respondió:', msg))
+            .catch(err => {
+              console.error(err);
+              alert('No se pudo actualizar la imagen. Intenta de nuevo.');
+            });
+        });
+      }
+
+      // Subir imagen
+      if (uploadInput) {
+        uploadInput.addEventListener('change', event => {
+          const file = event.target.files[0];
+          if (!file) return;
+          const reader = new FileReader();
+          reader.onload = e => {
+            profilePhoto.src = e.target.result;
+          };
+          reader.readAsDataURL(file);
+          const formData = new FormData();
+          formData.append('file', file);
+          fetch('/api/me/photo', {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+          })
+            .then(response => {
+              if (!response.ok) throw new Error('Error al subir la foto.');
+            })
+            .catch(err => {
+              console.error(err);
+              alert('No se pudo subir la imagen. Intenta de nuevo.');
+            });
+        });
+      }
+    });
+  </script>
 </body>
 </html>

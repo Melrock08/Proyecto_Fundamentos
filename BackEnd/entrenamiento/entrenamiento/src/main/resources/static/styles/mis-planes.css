@@ -1,0 +1,16 @@
+/* Si ya incluyes plan-entrenamiento.css, gran parte del estilo ya está. Solo añade ajustes puntuales: */
+
+.view-plan-button {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  border-radius: var(--radio-bordes);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+.view-plan-button:hover {
+  background-color: #1f618d;
+}
