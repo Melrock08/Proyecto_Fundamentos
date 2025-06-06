@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Elegir Plan de Entrenamiento</title>
+
+  <!-- Hoja de estilo base de roles -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+  <!-- Estilos específicos para esta página -->
+  <link rel="stylesheet" href="/styles/PlanEntrenamiento.css" />
+</head>
+<body>
+  <!-- Navbar lateral estática para deportista -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul class="nav-links">
+      <li><a href="/tutorial-deportista.html">Tutorial</a></li>
+      <li><a href="/DSDeportista.html">Dashboard</a></li>
+      <li><a href="/mis-planes.html">Mis Planes</a></li>
+      <li><a href="/perfil.html">Perfil</a></li>
+      <li><a href="/logout">Cerrar Sesión</a></li>
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Selecciona un Plan de Entrenamiento</h1>
+      <p>
+        Elige uno de los planes disponibles.  
+        Verás el nombre y la descripción de cada plan, y podrás agregarlo a tus planes.
+      </p>
+    </header>
+
+    <!-- Contenedor de tarjetas de planes disponibles -->
+    <section class="cards-container" id="plans-container">
+      <!-- El texto “Cargando planes disponibles…” se borrará al recibir la respuesta -->
+      <p class="loading-text">Cargando planes disponibles…</p>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <!-- ----- JAVASCRIPT AL FINAL ----- -->
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const plansContainer = document.getElementById('plans-container');
+      console.log('plansContainer encontrado:', plansContainer);
+
+      // Llamamos a GET /api/plans (según tu PlanController)
+      fetch('/api/plans', {
+        method: 'GET',
+        credentials: 'same-origin'
+      })
+      .then(res => {
+        console.log('Fetch /api/plans status:', res.status);
+        if (!res.ok) {
+          throw new Error('No se pudieron cargar los planes: ' + res.status);
+        }
+        return res.json();
+      })
+      .then(plans => {
+        console.log('Planes recibidos:', plans);
+        plansContainer.innerHTML = ''; // Limpiamos el mensaje de “Cargando…”
+        if (!Array.isArray(plans) || plans.length === 0) {
+          plansContainer.innerHTML = '<p>No hay planes disponibles por el momento.</p>';
+          return;
+        }
+
+        plans.forEach(plan => {
+          /* 
+            Tu PlanController devuelve entidades Plan con al menos estos campos:
+              plan.id
+              plan.nombre        → nombre del plan
+              plan.descripcion   → descripción breve del plan
+              plan.nivel         → (por ejemplo “principiante”, “intermedio”, etc.)
+              plan.duracion      → duración en semanas
+              plan.objetivoGeneral,
+              plan.publico,
+              plan.fases (lista de fases, cada una con sus semanas)
+            Aquí vamos a mostrar únicamente nombre y descripcion.
+          */
+
+          const card = document.createElement('div');
+          card.classList.add('card');
+
+          // Nombre del plan
+          const planTitleEl = document.createElement('h2');
+          planTitleEl.classList.add('plan-title');
+          planTitleEl.textContent = plan.nombre || 'Plan sin nombre';
+
+          // Descripción breve
+          const planDescEl = document.createElement('p');
+          planDescEl.classList.add('plan-desc');
+          planDescEl.textContent = plan.descripcion || 'Sin descripción disponible';
+
+          // (Opcional) Mostrar nivel y duración:
+          // const metaEl = document.createElement('p');
+          // metaEl.classList.add('plan-meta');
+          // metaEl.textContent = `Nivel: ${plan.nivel || 'N/A'} • Duración: ${plan.duracion || '?'} semanas`;
+
+          // Botón “Agregar a mis planes”
+          const addButton = document.createElement('button');
+          addButton.classList.add('add-plan-button');
+          addButton.textContent = 'Agregar a mis planes';
+          addButton.addEventListener('click', () => {
+            addButton.disabled = true;
+            addButton.textContent = 'Agregando…';
+            fetch(`/api/plans/${plan.id}/subscribe`, {
+              method: 'POST',
+              credentials: 'same-origin'
+            })
+            .then(resp => {
+              if (!resp.ok) throw new Error('No se pudo suscribir al plan');
+              addButton.textContent = 'Agregado ✅';
+            })
+            .catch(err => {
+              console.error(err);
+              alert('Error al agregar el plan. Intenta de nuevo.');
+              addButton.disabled = false;
+              addButton.textContent = 'Agregar a mis planes';
+            });
+          });
+
+          // Ensamblar tarjeta
+          card.appendChild(planTitleEl);
+          card.appendChild(planDescEl);
+          // card.appendChild(metaEl); // si deseas mostrar nivel/duración
+          card.appendChild(addButton);
+
+          plansContainer.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        plansContainer.innerHTML = '<p>Error cargando los planes. Intenta recargar.</p>';
+      });
+    });
+  </script>
+</body>
+</html>

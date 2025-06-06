@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>CoachSync – Mis Planes</title>
+
+  <!-- Hoja de estilo compartida -->
+  <link rel="stylesheet" href="/styles/roles.css" />
+  <!-- Podrías reutilizar plan-entrenamiento.css para el diseño de las tarjetas -->
+  <link rel="stylesheet" href="/styles/plan-entrenamiento.css" />
+</head>
+<body>
+  <!-- Navbar lateral dinámico -->
+  <nav class="navbar">
+    <div class="nav-logo">
+      <img src="/images/logoCS.png" alt="Logo CoachSync" />
+      <span>CoachSync</span>
+    </div>
+    <ul id="dynamic-nav" class="nav-links">
+      <!-- Se llenará vía JS -->
+    </ul>
+  </nav>
+
+  <div class="main-content">
+    <header class="role-header">
+      <h1>Mis Planes de Entrenamiento</h1>
+      <p>Estos son los planes a los que te suscribiste.</p>
+    </header>
+
+    <!-- Contenedor de tarjetas con los planes suscritos -->
+    <section class="cards-container" id="my-plans-container">
+      <p class="loading-text">Cargando tus planes…</p>
+    </section>
+  </div>
+
+  <footer>
+    <div class="footer-content">
+      <p>&copy; 2025 CoachSync. Todos los derechos reservados.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navContainer     = document.getElementById('dynamic-nav');
+      const myPlansContainer = document.getElementById('my-plans-container');
+
+      // 1) Cargar datos de usuario para construir la navbar
+      fetch('/api/me', {
+        method: 'GET',
+        credentials: 'same-origin'
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('No se pudo cargar información de usuario');
+        return res.json();
+      })
+      .then(data => {
+        const rawRole = data.role.startsWith('ROLE_')
+                        ? data.role.substring(5)
+                        : data.role;
+        const role = rawRole.toLowerCase();
+
+        let navLinks = '';
+        if (role === 'entrenador') {
+          navLinks = `
+            <li><a href="/tutorial-entrenador.html">Tutorial</a></li>
+            <li><a href="/DSentrenador.html">Dashboard</a></li>
+            <li><a href="/perfil.html">Perfil</a></li>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+          `;
+        } else if (role === 'deportista') {
+          navLinks = `
+            <li><a href="/tutorial-deportista.html">Tutorial</a></li>
+            <li><a href="/DSDeportista.html">Dashboard</a></li>
+            <li><a href="/roles/mis-planes.html" class="active">Mis Planes</a></li>
+            <li><a href="/perfil.html">Perfil</a></li>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+          `;
+        } else {
+          navLinks = `
+            <li><a href="/perfil.html">Perfil</a></li>
+            <li><a href="/logout">Cerrar Sesión</a></li>
+          `;
+        }
+        navContainer.innerHTML = navLinks;
+      })
+      .catch(err => {
+        console.error(err);
+        navContainer.innerHTML = `
+          <li><a href="/logout">Cerrar Sesión</a></li>
+        `;
+      });
+
+      // 2) Cargar los planes suscritos por el deportista
+      fetch('/api/me/plans', {
+        method: 'GET',
+        credentials: 'same-origin'
+      })
+      .then(res => {
+        if (!res.ok) throw new Error('No se pudieron cargar tus planes');
+        return res.json();
+      })
+      .then(plans => {
+        myPlansContainer.innerHTML = '';
+        if (plans.length === 0) {
+          myPlansContainer.innerHTML = '<p>No te has suscrito a ningún plan.</p>';
+          return;
+        }
+        plans.forEach(plan => {
+          /* plan = {
+               id,
+               title,
+               description,
+               trainerName,
+               trainerPhotoUrl,   // URL absoluto o nombre en /uploads/
+             }
+          */
+          const card = document.createElement('div');
+          card.classList.add('card');
+
+          const imgWrapper = document.createElement('div');
+          imgWrapper.classList.add('trainer-photo-wrapper');
+          const img = document.createElement('img');
+          img.classList.add('trainer-photo');
+          if (plan.trainerPhotoUrl.startsWith('http')) {
+            img.src = plan.trainerPhotoUrl;
+          } else {
+            img.src = '/uploads/' + plan.trainerPhotoUrl;
+          }
+          img.alt = `Foto de ${plan.trainerName}`;
+          imgWrapper.appendChild(img);
+
+          const trainerNameEl = document.createElement('h3');
+          trainerNameEl.classList.add('trainer-name');
+          trainerNameEl.textContent = plan.trainerName;
+
+          const planTitleEl = document.createElement('h2');
+          planTitleEl.classList.add('plan-title');
+          planTitleEl.textContent = plan.title;
+
+          const planDescEl = document.createElement('p');
+          planDescEl.classList.add('plan-desc');
+          planDescEl.textContent = plan.description;
+
+          // Botón para ver detalle o ir a la sección de seguimiento
+          const viewButton = document.createElement('button');
+          viewButton.classList.add('view-plan-button');
+          viewButton.textContent = 'Ver Plan';
+          viewButton.addEventListener('click', () => {
+            // Redirige a la página donde se muestra el plan detallado
+            window.location.href = `/roles/seguimiento-plan.html?planId=${plan.id}`;
+          });
+
+          card.appendChild(imgWrapper);
+          card.appendChild(trainerNameEl);
+          card.appendChild(planTitleEl);
+          card.appendChild(planDescEl);
+          card.appendChild(viewButton);
+
+          myPlansContainer.appendChild(card);
+        });
+      })
+      .catch(err => {
+        console.error(err);
+        myPlansContainer.innerHTML = '<p>Error cargando tus planes. Intenta recargar.</p>';
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,6 +1,8 @@
 package com.example.entrenamiento.entity;
 
 import jakarta.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "usuarios")
@@ -34,8 +36,22 @@ public class Usuario {
     @Column(nullable = false)
     private String role;
 
+    // Nombre de archivo de la foto de perfil (opcional)
     @Column(name = "photo_filename")
     private String photoFilename;
+
+    // ---------------------------------------------------
+    // Relación ManyToMany con Plan:
+    // Un usuario puede suscribirse a muchos planes,
+    // y un plan puede tener muchos usuarios suscritos.
+    @ManyToMany
+    @JoinTable(
+      name = "usuario_plan",
+      joinColumns = @JoinColumn(name = "usuario_id"),
+      inverseJoinColumns = @JoinColumn(name = "plan_id")
+    )
+    private Set<Plan> planesSuscritos = new HashSet<>();
+    // ---------------------------------------------------
 
     public Usuario() { }
 
@@ -102,4 +118,24 @@ public class Usuario {
     public void setPhotoFilename(String photoFilename) {
         this.photoFilename = photoFilename;
     }
+
+    public Set<Plan> getPlanesSuscritos() {
+        return planesSuscritos;
+    }
+    public void setPlanesSuscritos(Set<Plan> planesSuscritos) {
+        this.planesSuscritos = planesSuscritos;
+    }
+
+    // (Opcional) Método auxiliar para agregar un plan:
+    public void agregarPlan(Plan plan) {
+        this.planesSuscritos.add(plan);
+        plan.getUsuariosSuscritos().add(this); // si Plan tiene la relación inversa
+    }
+
+    // (Opcional) Método auxiliar para remover un plan:
+    public void removerPlan(Plan plan) {
+        this.planesSuscritos.remove(plan);
+        plan.getUsuariosSuscritos().remove(this); // si Plan tiene la relación inversa
+    }
 }
+

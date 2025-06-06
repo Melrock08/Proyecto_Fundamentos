@@ -1,0 +1,108 @@
+/* Contenedor principal de tarjetas */
+.cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 0;
+}
+
+/* Tarjeta individual */
+.card {
+  background-color: var(--color-blanco);
+  border-radius: var(--radio-bordes);
+  box-shadow: var(--sombra-suave);
+  padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Wrapper para la foto del entrenador */
+.trainer-photo-wrapper {
+  width: 80px;
+  height: 80px;
+  margin-bottom: 0.75rem;
+}
+.trainer-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 2px solid var(--color-secundario);
+  background-color: #f0f0f0;
+}
+
+/* Nombre del entrenador */
+.trainer-name {
+  margin: 0.5rem 0 0.25rem;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-primario);
+}
+
+/* Título del plan */
+.plan-title {
+  margin: 0.25rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-texto);
+}
+
+/* Descripción breve del plan */
+.plan-desc {
+  font-size: 0.9rem;
+  color: var(--color-texto);
+  margin: 0.5rem 0 1rem;
+  line-height: 1.3;
+}
+
+/* Botón “Agregar a mis planes” */
+.add-plan-button {
+  background-color: var(--color-secundario);
+  color: var(--color-blanco);
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 0.95rem;
+  border-radius: var(--radio-bordes);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.add-plan-button:hover:not(:disabled) {
+  background-color: #1f618d;
+}
+.add-plan-button:disabled {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* Texto que aparece mientras se cargan los planes */
+.loading-text {
+  grid-column: 1 / -1;
+  text-align: center;
+  font-size: 1rem;
+  color: var(--color-primario);
+}
+
+/* Ajustes responsivos (opcional) */
+@media (max-width: 600px) {
+  .card {
+    padding: 0.75rem;
+  }
+  .trainer-photo-wrapper {
+    width: 60px;
+    height: 60px;
+  }
+  .plan-title {
+    font-size: 1rem;
+  }
+  .plan-desc {
+    font-size: 0.85rem;
+  }
+  .add-plan-button {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.8rem;
+  }
+}
